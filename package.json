@@ -20,7 +20,7 @@
     "satori": "^0.26.0",
     "sharp": "^0.35.1",
     "tailwindcss": "^4.1.7",
-    "typescript": "^5.9.2"
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
     "astro-compress": "^2.3.8"
