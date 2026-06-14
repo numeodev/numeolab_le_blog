@@ -15,7 +15,7 @@
     "@emnapi/core": "1.11.1",
     "@emnapi/runtime": "1.11.1",
     "@resvg/resvg-js": "^2.6.2",
-    "@tailwindcss/vite": "^4.1.7",
+    "@tailwindcss/vite": "^4.3.1",
     "astro": "^5.8.0",
     "satori": "^0.26.0",
     "sharp": "^0.34.2",
