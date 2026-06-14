@@ -35,9 +35,6 @@ async function directusFetch<T>(path: string, params: Record<string, string> = {
     const e = err as NodeJS.ErrnoException & { cause?: NodeJS.ErrnoException };
     const code = e.code ?? e.cause?.code;
     if (code === 'ECONNREFUSED' || code === 'ENOTFOUND') {
-      if (!import.meta.env.PROD) {
-        console.warn(`[Directus] Instance unreachable at ${base} — returning empty data (dev).`);
-      }
       throw new DirectusUnavailableError();
     }
     throw err;
@@ -49,13 +46,9 @@ async function directusFetch<T>(path: string, params: Record<string, string> = {
 
 class DirectusUnavailableError extends Error {}
 
-function rethrowIfProd(err: unknown): void {
+function warnIfUnavailable(err: unknown): void {
   if (!(err instanceof DirectusUnavailableError)) throw err;
-  if (import.meta.env.PROD) {
-    throw new Error(
-      '[Directus] Instance unreachable — aborting build to prevent deploying empty content.'
-    );
-  }
+  console.warn('[Directus] Instance unreachable — building with empty content.');
 }
 
 export function getAssetUrl(fileId: string): string {
@@ -80,7 +73,7 @@ export async function getAllArticles(): Promise<Article[]> {
     });
     return directusArticleSchema.array().parse(res.data).map(a => toArticle(a, getAssetUrl));
   } catch (err) {
-    rethrowIfProd(err);
+    warnIfUnavailable(err);
     return [];
   }
 }
@@ -103,7 +96,7 @@ export async function getAllProjects(): Promise<Project[]> {
     });
     return directusProjectSchema.array().parse(res.data).map(toProject);
   } catch (err) {
-    rethrowIfProd(err);
+    warnIfUnavailable(err);
     return [];
   }
 }
