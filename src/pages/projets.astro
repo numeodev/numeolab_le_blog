@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Pagination from '../components/Pagination.astro';
+import ProjectListItem from '../components/ProjectListItem.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { PROJECTS_PER_PAGE } from '../directus/api';
+
+const allEntries = await getCollection('projects');
+const allProjects = allEntries.map((e) => e.data);
+const totalPages = Math.ceil(allProjects.length / PROJECTS_PER_PAGE);
+const projects = allProjects.slice(0, PROJECTS_PER_PAGE);
+---
+
+<!doctype html>
+<html lang="fr">
+	<head>
+		<BaseHead title={`${SITE_TITLE} - Projets`} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="py-16 px-4 bg-gradient-to-b from-indigo-900/20 to-transparent">
+				<div class="container mx-auto max-w-4xl">
+					<div class="mb-8 text-center">
+						<h1 class="text-3xl font-bold mb-4 gradient-text">Projets</h1>
+					</div>
+
+					{projects.length === 0 ? (
+						<div class="flex flex-col items-center justify-center py-20 text-center">
+							<div class="w-16 h-16 mb-6 rounded-full bg-indigo-900/30 border border-indigo-700/40 flex items-center justify-center">
+								<i class="fas fa-flask text-2xl text-indigo-400/60" aria-hidden="true"></i>
+							</div>
+							<p class="text-gray-300 text-lg font-medium mb-2">Rien ici pour l'instant</p>
+							<p class="text-gray-500 text-sm max-w-sm">
+								Des projets sont en cours — revenez bientôt pour voir ce qui se construit.
+							</p>
+						</div>
+					) : (
+						<ul class="flex flex-col gap-12">
+							{projects.map((project) => <ProjectListItem project={project} />)}
+						</ul>
+					)}
+
+					{totalPages > 1 && (
+						<Pagination
+							currentPage={1}
+							totalPages={totalPages}
+							baseUrl="/projets"
+						/>
+					)}
+				</div>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

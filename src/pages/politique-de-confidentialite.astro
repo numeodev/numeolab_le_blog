@@ -1,0 +1,154 @@
+---
+import StaticPage from '../layouts/StaticPage.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<StaticPage
+  title={`Politique de confidentialité — ${SITE_TITLE}`}
+  description="Politique de confidentialité et traitement des données personnelles — conforme au RGPD."
+>
+  <div class="mb-10">
+    <p class="code-font text-sm text-gray-500 mb-3 tracking-widest uppercase">Légal</p>
+    <h1 class="text-4xl font-bold mb-2">
+      <span class="gradient-text">Politique de confidentialité</span>
+    </h1>
+    <p class="text-gray-500 text-sm">Règlement général sur la protection des données — UE 2016/679 (RGPD)</p>
+  </div>
+
+  <div class="glass-effect rounded-xl border border-gray-700 divide-y divide-gray-800">
+
+    <section class="p-8">
+      <h2 class="text-lg font-semibold text-gray-200 mb-3">Responsable du traitement</h2>
+      <p class="text-sm text-gray-400">
+        Éditeur de Numeolab — <a href="mailto:contact@numeolab.fr" class="text-indigo-400 hover:text-indigo-300 transition-colors">contact@numeolab.fr</a>
+      </p>
+    </section>
+
+    <section class="p-8">
+      <h2 class="text-lg font-semibold text-gray-200 mb-3">Données collectées</h2>
+      <p class="text-sm text-gray-400 mb-4 leading-relaxed">
+        Ce site collecte uniquement les données strictement nécessaires à son fonctionnement :
+      </p>
+      <ul class="text-sm text-gray-400 space-y-4">
+        <li class="flex gap-3">
+          <span class="text-indigo-400 mt-0.5 shrink-0">→</span>
+          <span>
+            <strong class="text-gray-300">Données de navigation (Cloudflare)</strong> — lors de chaque requête HTTP, Cloudflare collecte automatiquement votre adresse IP, le navigateur utilisé, l'URL consultée, l'horodatage et le pays d'origine. Ces données sont traitées par Cloudflare en tant que sous-traitant pour assurer la distribution du contenu, la protection contre les attaques (DDoS) et la sécurité du réseau. Elles ne sont pas utilisées à des fins commerciales par l'éditeur.
+          </span>
+        </li>
+        <li class="flex gap-3">
+          <span class="text-indigo-400 mt-0.5 shrink-0">→</span>
+          <span>
+            <strong class="text-gray-300">Statistiques de visite (Umami)</strong> — si activé, ce site utilise Umami Analytics, un outil auto-hébergé et respectueux de la vie privée. Umami n'utilise pas de cookies et ne collecte pas de données personnelles identifiables : les visites sont comptabilisées via un hash anonymisé (sans stockage d'IP). Aucune donnée n'est transmise à des tiers.
+          </span>
+        </li>
+      </ul>
+      <p class="text-sm text-gray-500 mt-4">
+        Ce site n'utilise pas de cookies de traçage. Aucune donnée n'est partagée avec des tiers à des fins publicitaires.
+      </p>
+    </section>
+
+    <section class="p-8">
+      <h2 class="text-lg font-semibold text-gray-200 mb-3">Sous-traitants et tiers</h2>
+      <div class="overflow-x-auto">
+        <table class="text-sm text-gray-400 w-full">
+          <thead>
+            <tr class="text-gray-500 text-left border-b border-gray-800">
+              <th class="pb-2 pr-4 font-medium">Tiers</th>
+              <th class="pb-2 pr-4 font-medium">Rôle</th>
+              <th class="pb-2 font-medium">Politique</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-800/50">
+            <tr>
+              <td class="py-3 pr-4">Cloudflare, Inc.</td>
+              <td class="py-3 pr-4">Hébergeur / CDN</td>
+              <td class="py-3">
+                <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 transition-colors">cloudflare.com/privacypolicy</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4">Umami (auto-hébergé)</td>
+              <td class="py-3 pr-4">Analytique anonyme</td>
+              <td class="py-3">
+                <a href="https://umami.is/privacy" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 transition-colors">umami.is/privacy</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="p-8">
+      <h2 class="text-lg font-semibold text-gray-200 mb-3">Base légale et durée de conservation</h2>
+      <div class="overflow-x-auto">
+        <table class="text-sm text-gray-400 w-full">
+          <thead>
+            <tr class="text-gray-500 text-left border-b border-gray-800">
+              <th class="pb-2 pr-4 font-medium">Donnée</th>
+              <th class="pb-2 pr-4 font-medium">Base légale</th>
+              <th class="pb-2 font-medium">Conservation</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-800/50">
+            <tr>
+              <td class="py-3 pr-4">Logs Cloudflare (IP, requêtes)</td>
+              <td class="py-3 pr-4">Intérêt légitime (art. 6.1.f RGPD)</td>
+              <td class="py-3">≤ 30 jours (Cloudflare)</td>
+            </tr>
+            <tr>
+              <td class="py-3 pr-4">Statistiques Umami (anonymisées)</td>
+              <td class="py-3 pr-4">Intérêt légitime (art. 6.1.f RGPD)</td>
+              <td class="py-3">Agrégées, pas de données personnelles</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="p-8">
+      <h2 class="text-lg font-semibold text-gray-200 mb-3">Transferts hors Union européenne</h2>
+      <p class="text-sm text-gray-400 leading-relaxed">
+        Cloudflare, Inc. est une société américaine. Dans le cadre de la fourniture de son service CDN, des données techniques (notamment les adresses IP) peuvent transiter ou être traitées hors de l'Union européenne, y compris aux États-Unis. Ce transfert est encadré par les <strong class="text-gray-300">clauses contractuelles types (CCT)</strong> approuvées par la Commission européenne, conformément à l'article 46 du RGPD.
+      </p>
+      <p class="text-sm text-gray-400 mt-3">
+        Pour plus d'informations : <a href="https://www.cloudflare.com/cloudflare-customer-dpa/" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 transition-colors">Accord de traitement des données Cloudflare</a>.
+      </p>
+    </section>
+
+    <section class="p-8">
+      <h2 class="text-lg font-semibold text-gray-200 mb-3">Vos droits</h2>
+      <p class="text-sm text-gray-400 mb-4 leading-relaxed">
+        Conformément au RGPD, vous disposez des droits suivants concernant vos données personnelles :
+      </p>
+      <ul class="text-sm text-gray-400 space-y-2">
+        {[
+          ["Accès", "obtenir une copie des données vous concernant"],
+          ["Rectification", "corriger des données inexactes"],
+          ["Effacement", "demander la suppression de vos données"],
+          ["Opposition", "vous opposer à un traitement"],
+          ["Portabilité", "recevoir vos données dans un format structuré"],
+          ["Limitation", "restreindre temporairement un traitement"],
+        ].map(([right, desc]) => (
+          <li class="flex gap-2">
+            <span class="text-purple-400 shrink-0">·</span>
+            <span><strong class="text-gray-300">{right}</strong> — {desc}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="text-sm text-gray-400 mt-4">
+        Pour exercer ces droits : <a href="mailto:contact@numeolab.fr" class="text-indigo-400 hover:text-indigo-300 transition-colors">contact@numeolab.fr</a>. Réponse sous 30 jours.
+      </p>
+    </section>
+
+    <section class="p-8">
+      <h2 class="text-lg font-semibold text-gray-200 mb-3">Réclamations</h2>
+      <p class="text-sm text-gray-400 leading-relaxed">
+        Si vous estimez que vos droits ne sont pas respectés, vous pouvez introduire une réclamation auprès de la <strong class="text-gray-300">CNIL</strong> (autorité française de protection des données) : <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 transition-colors">www.cnil.fr</a>.
+      </p>
+    </section>
+
+  </div>
+
+  <p class="text-xs text-gray-600 text-center mt-8">Dernière mise à jour : juin 2026</p>
+</StaticPage>

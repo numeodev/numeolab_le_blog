@@ -9,9 +9,18 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.0",
+    "@astrojs/check": "^0.9.4",
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.4.0",
-    "astro": "^5.8.0"
+    "@resvg/resvg-js": "^2.6.2",
+    "@tailwindcss/vite": "^4.1.7",
+    "astro": "^5.8.0",
+    "satori": "^0.26.0",
+    "sharp": "^0.34.2",
+    "tailwindcss": "^4.1.7",
+    "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "astro-compress": "^2.3.8"
   }
 }

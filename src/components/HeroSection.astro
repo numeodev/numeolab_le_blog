@@ -1,0 +1,57 @@
+---
+import HeaderLink from '../components/HeaderLink.astro';
+---
+
+<section class="py-20 px-4">
+  <div class="container mx-auto max-w-6xl">
+    <div class="flex flex-col md:flex-row items-center">
+      <div class="md:w-1/2 mb-10 md:mb-0 mr-6">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">
+          <span class="gradient-text">Code, projets, et ce que j'apprends en chemin.</span>
+        </h1>
+        <p class="text-lg text-gray-300 mb-8">
+          Écriture technique sur le génie logiciel, le développement indie, et l'art de construire des produits.
+          Décisions d'architecture, projets perso, et leçons apprises — sans rembourrage.
+        </p>
+        <div class="flex space-x-4">
+          <HeaderLink href="/blog/" class="px-6 py-3 bg-indigo-600 border border-indigo-500 rounded-lg font-medium hover:bg-indigo-500 transition-colors">
+            Lire le blog
+          </HeaderLink>
+          <HeaderLink href="/projets/" class="px-6 py-3 border border-indigo-500/40 text-indigo-300 rounded-lg font-medium hover:bg-indigo-900/30 transition-colors">
+            Projets
+          </HeaderLink>
+        </div>
+      </div>
+      <div class="md:w-1/2 relative">
+        <div class="glass-effect p-6 rounded-xl border border-gray-700">
+          <div class="flex space-x-2 mb-4">
+            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+          </div>
+          <div class="code-font text-sm space-y-1">
+            <p><span class="text-green-400">$</span> <span class="text-white">whoami</span></p>
+            <p class="pl-2"><a href="/a-propos/" class="text-indigo-400 hover:text-indigo-300 transition-colors">→ /about-me</a></p>
+            <p class="mt-2"><span class="text-green-400">$</span> <span class="text-white">cat now.txt</span></p>
+            <p class="text-gray-400">&gt; Software engineer.</p>
+            <p class="text-gray-400">&gt; Building things, writing about it.</p>
+            <p class="text-gray-400">&gt; Currently: setting up this blog.</p>
+            <p class="mt-2 text-green-400">$ <span class="text-pink-400 blinking-cursor">|</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .blinking-cursor {
+    animation: blink 1s step-end infinite;
+    will-change: opacity;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>

@@ -1,0 +1,67 @@
+---
+import type { Project } from '../directus/api';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<li class="glass-effect rounded-xl overflow-hidden hover:border-indigo-400 transition-colors border border-gray-700">
+  <div class="flex flex-col my-1 mx-2">
+    <div class="p-6">
+      <div class="flex items-start mb-8">
+        <div>
+          <p class="text-xs text-indigo-400 uppercase tracking-wide mb-1">
+            {project.publishedAt.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
+          </p>
+          <h3 class="text-xl font-bold mb-1">{project.title}</h3>
+          <p class="text-gray-300 text-sm">
+            {project.description}
+          </p>
+        </div>
+      </div>
+      <p class="text-gray-300 mb-6 line-clamp-3 overflow-hidden">
+        {project.content?.replace(/<[^>]+>/g, '')}
+      </p>
+      <div class={`flex flex-wrap gap-2 ${project.projectUrl || project.projectRepo ? 'mb-6' : ''}`}>
+        {project.stack.length === 0 ? (
+          <span class="text-xs px-2 py-1 bg-gray-700 text-gray-400 rounded">
+            Aucune technologie renseignée
+          </span>
+        ) : project.stack.map((tech) => (
+          <span class="text-xs px-2 py-1 bg-indigo-900/50 text-violet-300 rounded">
+            {tech}
+          </span>
+        ))}
+      </div>
+      {(project.projectUrl || project.projectRepo) && (
+        <div class="flex space-x-4">
+          {project.projectUrl && (
+            <a
+              href={project.projectUrl}
+              class="text-indigo-400 hover:text-indigo-300 flex items-center text-sm"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="fas fa-external-link-alt mr-2" aria-hidden="true"></i>
+              Voir le projet
+            </a>
+          )}
+          {project.projectRepo && (
+            <a
+              href={project.projectRepo}
+              class="text-gray-400 hover:text-gray-300 flex items-center text-sm"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="fab fa-github mr-2" aria-hidden="true"></i>
+              Code source
+            </a>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+</li>

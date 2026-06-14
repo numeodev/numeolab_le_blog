@@ -1,0 +1,89 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <BaseHead title={`404 — ${SITE_TITLE}`} description="Cette page n'existe pas." />
+  </head>
+  <body class="min-h-screen">
+    <Header />
+    <main class="flex items-center justify-center py-24 px-4">
+      <div class="container mx-auto max-w-6xl">
+        <div class="flex flex-col md:flex-row items-center gap-16">
+
+          <div class="md:w-1/2">
+            <p class="code-font text-sm text-gray-500 mb-4 tracking-widest uppercase">Erreur</p>
+            <h1 class="text-7xl md:text-9xl font-bold mb-4">
+              <span class="gradient-text">404</span>
+            </h1>
+            <h2 class="text-2xl md:text-3xl font-semibold text-gray-200 mb-4">
+              Page introuvable.
+            </h2>
+            <p class="text-gray-400 text-lg mb-10 leading-relaxed">
+              Cette URL n'existe pas — ou elle existait et a été supprimée.<br />
+              Dans tous les cas, il n'y a rien à construire en public ici.
+            </p>
+            <div class="flex flex-wrap gap-4">
+              <a
+                href="/"
+                class="px-6 py-3 bg-slate-700 border border-slate-500 rounded-lg font-medium hover:bg-slate-600 transition-colors"
+              >
+                Retour à l'accueil
+              </a>
+              <a
+                href="/blog/"
+                class="px-6 py-3 border border-indigo-500/40 text-indigo-300 rounded-lg font-medium hover:bg-indigo-900/30 transition-colors"
+              >
+                Lire le blog
+              </a>
+            </div>
+          </div>
+
+          <div class="md:w-1/2 relative w-full">
+            <div class="glass-effect p-6 rounded-xl border border-gray-700">
+              <div class="flex space-x-2 mb-4">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              </div>
+              <div class="code-font space-y-2 text-sm">
+                <p class="text-green-400">$ curl https://numeolab.fr<span id="path" class="text-gray-400"></span></p>
+                <p class="text-gray-400">&gt; Resolving host...</p>
+                <p class="text-gray-400">&gt; Connected.</p>
+                <p class="text-red-400">&gt; HTTP/1.1 404 Not Found</p>
+                <p class="text-gray-500">&gt; Content-Type: text/html</p>
+                <p class="text-yellow-400">&gt; The requested resource could not be located.</p>
+                <p class="text-gray-400">&gt; Exiting with code <span class="text-red-400">1</span>...</p>
+                <p class="text-indigo-400">&gt; <span class="text-pink-400 blinking-cursor">|</span></p>
+              </div>
+            </div>
+            <div class="absolute -z-10 w-full h-full bg-red-500/5 rounded-xl -right-4 -bottom-4"></div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<script>
+  const pathEl = document.getElementById('path');
+  if (pathEl) pathEl.textContent = window.location.pathname;
+</script>
+
+<style>
+  .blinking-cursor {
+    animation: blink 1s step-end infinite;
+    will-change: opacity;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+import StaticPage from '../layouts/StaticPage.astro';
+import { SITE_TITLE, SITE_URL } from '../consts';
+---
+
+<StaticPage
+  title={`Mentions légales — ${SITE_TITLE}`}
+  description="Mentions légales de Numeolab, conformément à la loi française (LCEN, 21 juin 2004)."
+>
+  <div class="mb-10">
+    <p class="code-font text-sm text-gray-500 mb-3 tracking-widest uppercase">Légal</p>
+    <h1 class="text-4xl font-bold mb-2">
+      <span class="gradient-text">Mentions légales</span>
+    </h1>
+    <p class="text-gray-500 text-sm">Conformément à la loi française n°2004-575 du 21 juin 2004 (LCEN)</p>
+  </div>
+
+  <div class="glass-effect rounded-xl border border-gray-700 divide-y divide-gray-800">
+
+    <section class="p-8">
+      <h2 class="text-lg font-semibold text-gray-200 mb-4">Éditeur du site</h2>
+      <dl class="space-y-2 text-sm text-gray-400">
+        <div class="flex gap-2"><dt class="text-gray-500 w-40 shrink-0">Site web</dt><dd>{SITE_URL}</dd></div>
+        <div class="flex gap-2"><dt class="text-gray-500 w-40 shrink-0">Statut</dt><dd>Particulier — blog personnel</dd></div>
+        <div class="flex gap-2"><dt class="text-gray-500 w-40 shrink-0">Contact</dt><dd><a href="mailto:contact@numeolab.fr" class="text-indigo-400 hover:text-indigo-300 transition-colors">contact@numeolab.fr</a></dd></div>
+      </dl>
+      <p class="text-xs text-gray-600 mt-4">
+        Conformément à l'article 6-III-2 de la LCEN, l'identité de l'éditeur a été communiquée à l'hébergeur et peut être transmise aux autorités judiciaires sur demande.
+      </p>
+    </section>
+
+    <section class="p-8">
+      <h2 class="text-lg font-semibold text-gray-200 mb-4">Hébergeur</h2>
+      <dl class="space-y-2 text-sm text-gray-400">
+        <div class="flex gap-2"><dt class="text-gray-500 w-40 shrink-0">Hébergeur</dt><dd>Cloudflare, Inc.</dd></div>
+        <div class="flex gap-2"><dt class="text-gray-500 w-40 shrink-0">Adresse</dt><dd>101 Townsend St, San Francisco, CA 94107, États-Unis</dd></div>
+        <div class="flex gap-2"><dt class="text-gray-500 w-40 shrink-0">Site web</dt><dd><a href="https://www.cloudflare.com" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 transition-colors">www.cloudflare.com</a></dd></div>
+      </dl>
+      <p class="text-xs text-gray-600 mt-4">
+        Ce site est distribué via Cloudflare Pages, un réseau de diffusion de contenu (CDN) mondial. Les pages sont servies depuis des points de présence proches de chaque visiteur.
+      </p>
+    </section>
+
+    <section class="p-8">
+      <h2 class="text-lg font-semibold text-gray-200 mb-4">Propriété intellectuelle</h2>
+      <p class="text-sm text-gray-400 leading-relaxed mb-3">
+        L'ensemble des contenus publiés sur ce site (articles, code, illustrations) est la propriété exclusive de l'éditeur, sauf mention contraire. Toute reproduction à des fins commerciales est strictement interdite sans autorisation écrite préalable.
+      </p>
+      <p class="text-sm text-gray-400 leading-relaxed">
+        La citation et le partage à des fins non commerciales sont autorisés, sous réserve d'un crédit à la source avec lien vers l'article original.
+      </p>
+    </section>
+
+    <section class="p-8">
+      <h2 class="text-lg font-semibold text-gray-200 mb-4">Limitation de responsabilité</h2>
+      <p class="text-sm text-gray-400 leading-relaxed">
+        Les informations publiées sur ce site sont fournies à titre informatif uniquement. L'éditeur ne saurait être tenu responsable des erreurs, omissions ou résultats obtenus à partir des informations présentes sur ce site.
+      </p>
+    </section>
+
+  </div>
+
+  <p class="text-xs text-gray-600 text-center mt-8">Dernière mise à jour : juin 2026</p>
+</StaticPage>

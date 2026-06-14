@@ -2,54 +2,152 @@
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
-import { SITE_TITLE } from '../consts';
+import { LANGUAGE, SITE_AUTHOR, SITE_LOCALE, SITE_TITLE, SITE_URL } from '../consts.ts';
 
 interface Props {
 	title: string;
 	description: string;
-	image?: string;
+	ogImage?: string;
+	type?: 'website' | 'article';
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
+const { title, description, ogImage, type = 'website' } = Astro.props;
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      "url": SITE_URL,
+      "name": SITE_TITLE,
+      "description": SITE_TITLE,
+      "inLanguage": LANGUAGE,
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${SITE_URL}/blog/?q={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": `${SITE_URL}/#author`,
+      "name": SITE_AUTHOR,
+      "url": `${SITE_URL}/a-propos/`
+    }
+  ]
+};
 ---
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content={SITE_TITLE} />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link
-	rel="alternate"
-	type="application/rss+xml"
-	title={SITE_TITLE}
-	href={new URL('rss.xml', Astro.site)}
+    rel="alternate"
+    type="application/rss+xml"
+    title={title}
+    href={new URL('rss.xml', Astro.site)}
 />
 <meta name="generator" content={Astro.generator} />
 
-<!-- Font preloads -->
-<link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
-<link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
+<!-- Critical Font preloads -->
+<link
+    rel="preload"
+    href="/fonts/Inter-VariableFont_opsz,wght.ttf"
+    as="font"
+    type="font/ttf"
+    crossorigin
+    fetchpriority="high"
+/>
+<link
+    rel="preload"
+    href="/fonts/FiraCode-Regular.ttf"
+    as="font"
+    type="font/ttf"
+    crossorigin
+/>
+
+<!-- Secondary Font preloads -->
+<link
+    rel="preload"
+    href="/fonts/Inter-Italic-VariableFont_opsz,wght.ttf"
+    as="font"
+    type="font/ttf"
+    crossorigin
+/>
+<link
+    rel="preload"
+    href="/fonts/FiraCode-SemiBold.ttf"
+    as="font"
+    type="font/ttf"
+    crossorigin
+/>
+<link
+    rel="preload"
+    href="/fonts/FiraCode-Bold.ttf"
+    as="font"
+    type="font/ttf"
+    crossorigin
+/>
+
+<!-- Font Awesome with display strategy -->
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    media="print"
+    onload="this.media='all'"
+/>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
+
+<!-- Robots -->
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+<!-- JSON-LD: WebSite + Person -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
+<meta name="author" content={SITE_AUTHOR} />
+<meta name="language" content={LANGUAGE} />
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:locale" content={SITE_LOCALE} />
+{ogImage && <meta property="og:image" content={ogImage} />}
 
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image, Astro.url)} />
+<!-- Twitter Card -->
+<meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{ogImage && <meta name="twitter:image" content={ogImage} />}
+
+<!-- Umami Analytics (self-hosted) -->
+{import.meta.env.PROD && import.meta.env.PUBLIC_UMAMI_SCRIPT_URL && import.meta.env.PUBLIC_UMAMI_WEBSITE_ID && (
+  <script
+    is:inline
+    async
+    defer
+    src={import.meta.env.PUBLIC_UMAMI_SCRIPT_URL}
+    data-website-id={import.meta.env.PUBLIC_UMAMI_WEBSITE_ID}
+    data-domains="numeolab.fr"
+  />
+)}

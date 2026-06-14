@@ -1,0 +1,91 @@
+---
+import { getCollection } from 'astro:content';
+import HeaderLink from './HeaderLink.astro';
+
+const allEntries = await getCollection('projects');
+const projects = allEntries.map((e) => e.data).slice(0, 2);
+const total = allEntries.length;
+---
+
+<section class="py-16 px-4">
+    <div class="container mx-auto max-w-6xl">
+      <div class="flex justify-between items-center mb-12">
+        <h2 class="text-3xl font-bold text-white">Projets récents</h2>
+        {total > 2 && (
+          <HeaderLink href="/projets/" class="text-indigo-400 hover:text-indigo-300 transition-colors flex items-center">
+            Voir tous les projets<i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>
+          </HeaderLink>
+        )}
+      </div>
+
+      {projects.length === 0 ? (
+        <div class="flex flex-col items-center justify-center py-16 text-center">
+          <div class="w-16 h-16 mb-6 rounded-full bg-indigo-900/30 border border-indigo-700/40 flex items-center justify-center">
+            <i class="fas fa-flask text-2xl text-indigo-400/60" aria-hidden="true"></i>
+          </div>
+          <p class="text-gray-300 text-lg font-medium mb-2">Rien ici pour l'instant</p>
+          <p class="text-gray-500 text-sm max-w-sm">
+            Des projets sont en cours — revenez bientôt pour voir ce qui se construit.
+          </p>
+        </div>
+      ) : (
+        <div class="flex flex-wrap justify-start gap-8">
+          {
+            projects.map((project) => (
+              <div class="glass-effect w-full md:w-[calc(50%-1rem)] rounded-xl p-8 border border-gray-700 hover:border-indigo-400 transition-colors">
+                <div class="flex items-start mb-8">
+                  <div>
+                    <p class="text-xs text-indigo-400 uppercase tracking-wide mb-1">
+                      {project.publishedAt.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
+                    </p>
+                    <h3 class="text-xl font-bold mb-1">{project.title}</h3>
+                    <p class="text-gray-300 text-sm">
+                      {project.description}
+                    </p>
+                  </div>
+                </div>
+                <p class="text-gray-300 mb-6 line-clamp-3 overflow-hidden">
+                  {project.content?.replace(/<[^>]+>/g, '')}
+                </p>
+                <div class="flex flex-wrap gap-2 mb-6">
+                  {
+                    project.stack.map((tech) => (
+                      <span class="text-xs px-2 py-1 bg-indigo-900/50 text-violet-300 rounded">
+                        {tech}
+                      </span>
+                    ))
+                  }
+                </div>
+                {(project.projectUrl || project.projectRepo) && (
+                  <div class="flex space-x-4">
+                    {project.projectUrl && (
+                      <a
+                        href={project.projectUrl}
+                        class="text-indigo-400 hover:text-indigo-300 flex items-center text-sm"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <i class="fas fa-external-link-alt mr-2" aria-hidden="true"></i>
+                        Voir le projet
+                      </a>
+                    )}
+                    {project.projectRepo && (
+                      <a
+                        href={project.projectRepo}
+                        class="text-gray-400 hover:text-gray-300 flex items-center text-sm"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <i class="fab fa-github mr-2" aria-hidden="true"></i>
+                        Code source
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))
+          }
+        </div>
+      )}
+    </div>
+</section>

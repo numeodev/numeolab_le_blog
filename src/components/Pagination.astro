@@ -1,0 +1,113 @@
+---
+export interface Props {
+	currentPage: number;
+	totalPages: number;
+	baseUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props;
+
+const generatePageNumbers = (current: number, total: number): (number | string)[] => {
+	const pages: (number | string)[] = [];
+
+	if (total <= 7) {
+		for (let i = 1; i <= total; i++) {
+			pages.push(i);
+		}
+	} else {
+		if (current <= 4) {
+			for (let i = 1; i <= 5; i++) {
+				pages.push(i);
+			}
+			pages.push('...');
+			pages.push(total);
+		} else if (current >= total - 3) {
+			pages.push(1);
+			pages.push('...');
+			for (let i = total - 4; i <= total; i++) {
+				pages.push(i);
+			}
+		} else {
+			pages.push(1);
+			pages.push('...');
+			for (let i = current - 1; i <= current + 1; i++) {
+				pages.push(i);
+			}
+			pages.push('...');
+			pages.push(total);
+		}
+	}
+
+	return pages;
+};
+
+const pageNumbers = generatePageNumbers(currentPage, totalPages);
+---
+
+<nav class="flex justify-center mt-12" aria-label="Pagination numérotée">
+	<div class="glass-effect rounded-xl border border-gray-700 p-4">
+		<div class="flex items-center space-x-2">
+			<!-- Previous button -->
+			{currentPage > 1 ? (
+				<a
+					href={currentPage === 2 ? baseUrl : `${baseUrl}/page/${currentPage - 1}`}
+					class="px-3 py-2 text-sm font-medium text-gray-300 bg-gray-800/50 rounded-lg border border-gray-600 hover:bg-indigo-900/30 hover:border-indigo-500 hover:text-indigo-300 transition-all duration-200 flex items-center"
+					aria-label="Page précédente"
+				>
+					<i class="fas fa-chevron-left mr-1" aria-hidden="true"></i>
+					Précédent
+				</a>
+			) : (
+				<span class="px-3 py-2 text-sm font-medium text-gray-500 bg-gray-800/30 rounded-lg border border-gray-600 cursor-not-allowed flex items-center" aria-disabled="true">
+					<i class="fas fa-chevron-left mr-1" aria-hidden="true"></i>
+					Précédent
+				</span>
+			)}
+
+			<!-- Page numbers -->
+			<div class="flex items-center space-x-1">
+				{pageNumbers.map((page) => (
+					page === '...' ? (
+						<span class="px-3 py-2 text-sm font-medium text-gray-400">...</span>
+					) : page === currentPage ? (
+						<span class="px-3 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg border border-indigo-500">
+							{page}
+						</span>
+					) : (
+						<a
+							href={page === 1 ? baseUrl : `${baseUrl}/page/${page}`}
+							class="px-3 py-2 text-sm font-medium text-gray-300 bg-gray-800/50 rounded-lg border border-gray-600 hover:bg-indigo-900/30 hover:border-indigo-500 hover:text-indigo-300 transition-all duration-200"
+							aria-label={`Aller à la page ${page}`}
+						>
+							{page}
+						</a>
+					)
+				))}
+			</div>
+
+			<!-- Next button -->
+			{currentPage < totalPages ? (
+				<a
+					href={`${baseUrl}/page/${currentPage + 1}`}
+					class="px-3 py-2 text-sm font-medium text-gray-300 bg-gray-800/50 rounded-lg border border-gray-600 hover:bg-indigo-900/30 hover:border-indigo-500 hover:text-indigo-300 transition-all duration-200 flex items-center"
+					aria-label="Page suivante"
+				>
+					Suivant
+					<i class="fas fa-chevron-right ml-1" aria-hidden="true"></i>
+				</a>
+			) : (
+				<span class="px-3 py-2 text-sm font-medium text-gray-500 bg-gray-800/30 rounded-lg border border-gray-600 cursor-not-allowed flex items-center" aria-disabled="true">
+					Suivant
+					<i class="fas fa-chevron-right ml-1" aria-hidden="true"></i>
+				</span>
+			)}
+		</div>
+	</div>
+</nav>
+
+<div class="text-center mt-4">
+	<p class="text-sm text-gray-400">
+		Page <span class="font-semibold text-indigo-400">{currentPage}</span> sur
+		<span class="font-semibold text-indigo-400">{totalPages}</span>
+	</p>
+</div>

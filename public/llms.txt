@@ -1,0 +1,27 @@
+# Numeolab
+
+> A build-in-public blog by Mathurin Bourgouin — French full-stack developer writing about web development, tooling, DevOps, and software engineering.
+
+Numeolab is a technical blog focused on practical experimentation. Each article documents real tools, libraries, frameworks, and engineering processes explored by the author. The site targets developers looking for honest, hands-on write-ups rather than tutorials.
+
+## Author
+
+Mathurin Bourgouin — French full-stack developer with 4 years experience. Interests include frontend (React, VueJS, Astro), backend (.NET, Docker), DevOps, and build-in-public culture.
+
+## Content
+
+- Blog articles on Frontend, Backend, DevOps, FinOps, Platform engineering, Docker, Tools, Unix, and buil in public topics
+- Project showcases with live demos and source repositories
+- RSS feed available at https://numeolab.fr/rss.xml
+
+## Key pages
+
+- [Home](https://numeolab.fr/): Hero, latest blog posts, and featured projects
+- [Blog](https://numeolab.fr/blog/): Full list of articles with pagination
+- [Projects](https://numeolab.fr/projects/): Showcase of personal projects
+- [About](https://numeolab.fr/about/): Author background and motivations
+- [RSS Feed](https://numeolab.fr/rss.xml): Machine-readable feed of all articles
+
+## Sitemap
+
+https://numeolab.fr/sitemap-index.xml

@@ -1,5 +1,6 @@
-// Place any global data in this file.
-// You can import this data from anywhere in your site by using the `import` keyword.
-
-export const SITE_TITLE = 'Astro Blog';
-export const SITE_DESCRIPTION = 'Welcome to my website!';
+export const SITE_TITLE = "Numeolab";
+export const SITE_DESCRIPTION = "Un blog build-in-public";
+export const SITE_URL = "https://numeolab.fr";
+export const SITE_AUTHOR = "Mathurin Bourgouin";
+export const LANGUAGE = "fr";
+export const SITE_LOCALE = "fr_FR";

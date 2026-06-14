@@ -1,24 +1,40 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-type Props = HTMLAttributes<'a'>;
+interface Props extends HTMLAttributes<'a'> {
+  showActiveIndicator?: boolean;
+  preserveStyle?: boolean;
+}
 
-const { href, class: className, ...props } = Astro.props;
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
+const { href, class: className, showActiveIndicator = true, preserveStyle = false, ...props } = Astro.props;
+const rawPathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
+const normalize = (p: string) => (p.length > 1 ? p.replace(/\/$/, '') : p);
+const pathname = normalize(rawPathname);
+const hrefNorm = normalize(href as string ?? '');
 const subpath = pathname.match(/[^\/]+/g);
-const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
+const isActive = hrefNorm === pathname || hrefNorm === '/' + (subpath?.[0] || '');
 ---
 
-<a href={href} class:list={[className, { active: isActive }]} {...props}>
+<a href={href} class:list={[className, { active: isActive && !preserveStyle }]} {...props}>
+	{isActive && showActiveIndicator && <span class="active-indicator">&gt;</span>}
 	<slot />
 </a>
+
 <style>
 	a {
-		display: inline-block;
-		text-decoration: none;
+		position: relative;
+		display: flex;
+		align-content: center;
+		gap: 0.25rem;
 	}
+	
+	.active-indicator {
+		color: #60a5fa;
+		font-weight: bold;
+		font-size: 0.875rem;
+	}
+	
 	a.active {
-		font-weight: bolder;
-		text-decoration: underline;
+		font-weight: 600;
 	}
 </style>
