@@ -28,22 +28,6 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: "CodeFont";
-  src: url("/fonts/FiraCode-SemiBold.ttf") format("truetype");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "CodeFont";
-  src: url("/fonts/FiraCode-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* Custom properties */
 :root {
   --color-primary-50: 238 242 255;

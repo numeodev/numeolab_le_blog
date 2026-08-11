@@ -5,9 +5,9 @@ import Icon from './icons/logo.astro';
 
 <header class="bg-slate-900 sticky top-0 z-50 border-b border-gray-700">
 	<div
-        class="container mx-auto max-w-6xl py-4 flex justify-between items-center"
+        class="container mx-auto max-w-6xl px-4 py-4 flex justify-between items-center"
       >
-		<div class="flex items-center space-x-2">
+		<div class="flex items-center space-x-2" transition:persist transition:name="site-logo">
 			<HeaderLink href="/" showActiveIndicator={false} preserveStyle={true}>
 				<Icon class="w-56 h-20"/>
 			</HeaderLink>
@@ -25,29 +25,69 @@ import Icon from './icons/logo.astro';
 			aria-expanded="false"
 			aria-controls="mobile-nav"
 		>
-			<i class="fas fa-bars" aria-hidden="true"></i>
+			<i id="menu-toggle-icon" class="fas fa-bars" aria-hidden="true"></i>
 		</button>
 	</div>
 
+	<div id="mobile-nav-backdrop" class="hidden md:hidden fixed inset-0 z-40 bg-black/60"></div>
+
 	<nav
 		id="mobile-nav"
-		class="hidden md:hidden flex-col space-y-2 px-4 pb-4"
+		class="md:hidden relative z-50 max-h-0 overflow-hidden opacity-0 transition-[max-height,opacity] duration-300 ease-in-out border-t border-gray-800 bg-slate-900"
 		aria-label="Navigation mobile"
 	>
-		<HeaderLink href="/" class="block py-2 hover:text-indigo-400 transition-colors" data-astro-prefetch>Accueil</HeaderLink>
-		<HeaderLink href="/blog/" class="block py-2 hover:text-indigo-400 transition-colors" data-astro-prefetch>Blog</HeaderLink>
-		<HeaderLink href="/projets/" class="block py-2 hover:text-indigo-400 transition-colors" data-astro-prefetch>Projets</HeaderLink>
-		<HeaderLink href="/a-propos/" class="block py-2 hover:text-indigo-400 transition-colors" data-astro-prefetch>À propos</HeaderLink>
+		<div class="px-4 py-2 divide-y divide-gray-800">
+			<HeaderLink href="/" class="w-full py-3.5 text-base hover:text-indigo-400 transition-colors" data-astro-prefetch>Accueil</HeaderLink>
+			<HeaderLink href="/blog/" class="w-full py-3.5 text-base hover:text-indigo-400 transition-colors" data-astro-prefetch>Blog</HeaderLink>
+			<HeaderLink href="/projets/" class="w-full py-3.5 text-base hover:text-indigo-400 transition-colors" data-astro-prefetch>Projets</HeaderLink>
+			<HeaderLink href="/a-propos/" class="w-full py-3.5 text-base hover:text-indigo-400 transition-colors" data-astro-prefetch>À propos</HeaderLink>
+		</div>
 	</nav>
 </header>
 
 <script>
-	const toggle = document.getElementById('menu-toggle');
-	const mobileNav = document.getElementById('mobile-nav');
+	function getNavEls() {
+		return {
+			toggle: document.getElementById('menu-toggle'),
+			toggleIcon: document.getElementById('menu-toggle-icon'),
+			mobileNav: document.getElementById('mobile-nav'),
+			backdrop: document.getElementById('mobile-nav-backdrop'),
+		};
+	}
 
-	toggle?.addEventListener('click', () => {
-		const isOpen = mobileNav?.classList.toggle('hidden') === false;
-		toggle.setAttribute('aria-expanded', String(isOpen));
-		toggle.setAttribute('aria-label', isOpen ? 'Fermer le menu' : 'Ouvrir le menu');
+	function setMenuOpen(open: boolean) {
+		const { toggle, toggleIcon, mobileNav, backdrop } = getNavEls();
+		toggle?.setAttribute('aria-expanded', String(open));
+		toggle?.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+		toggleIcon?.classList.toggle('fa-bars', !open);
+		toggleIcon?.classList.toggle('fa-times', open);
+		mobileNav?.classList.toggle('max-h-0', !open);
+		mobileNav?.classList.toggle('opacity-0', !open);
+		mobileNav?.classList.toggle('max-h-96', open);
+		mobileNav?.classList.toggle('opacity-100', open);
+		backdrop?.classList.toggle('hidden', !open);
+		document.body.classList.toggle('overflow-hidden', open);
+	}
+
+	function initMobileNav() {
+		const { toggle, mobileNav, backdrop } = getNavEls();
+
+		toggle?.addEventListener('click', () => {
+			setMenuOpen(!mobileNav?.classList.contains('max-h-96'));
+		});
+
+		backdrop?.addEventListener('click', () => setMenuOpen(false));
+
+		mobileNav?.querySelectorAll('a').forEach((link) => {
+			link.addEventListener('click', () => setMenuOpen(false));
+		});
+	}
+
+	// Réexécuté au chargement initial et après chaque navigation ClientRouter,
+	// car le header (hors logo persisté) est reconstruit à chaque page.
+	document.addEventListener('astro:page-load', initMobileNav);
+
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') setMenuOpen(false);
 	});
 </script>
