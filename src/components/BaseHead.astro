@@ -2,6 +2,7 @@
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 import { LANGUAGE, SITE_AUTHOR, SITE_LOCALE, SITE_TITLE, SITE_URL } from '../consts.ts';
 
 interface Props {
@@ -61,6 +62,9 @@ const websiteJsonLd = {
 />
 <meta name="generator" content={Astro.generator} />
 
+<!-- View Transitions: navigation client-side, header persistant -->
+<ClientRouter />
+
 <!-- Critical Font preloads -->
 <link
     rel="preload"
@@ -73,29 +77,6 @@ const websiteJsonLd = {
 <link
     rel="preload"
     href="/fonts/FiraCode-Regular.ttf"
-    as="font"
-    type="font/ttf"
-    crossorigin
-/>
-
-<!-- Secondary Font preloads -->
-<link
-    rel="preload"
-    href="/fonts/Inter-Italic-VariableFont_opsz,wght.ttf"
-    as="font"
-    type="font/ttf"
-    crossorigin
-/>
-<link
-    rel="preload"
-    href="/fonts/FiraCode-SemiBold.ttf"
-    as="font"
-    type="font/ttf"
-    crossorigin
-/>
-<link
-    rel="preload"
-    href="/fonts/FiraCode-Bold.ttf"
     as="font"
     type="font/ttf"
     crossorigin

@@ -4,7 +4,7 @@ const today = new Date();
 
 <footer class="pb-12 px-4">
 	<div class="container mx-auto max-w-6xl">
-		<div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+		<div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
 			<div class="social-links flex space-x-4">
 				<a href="https://github.com/numeodev" target="_blank">
 					<span class="sr-only">Voir le profil GitHub</span>
@@ -31,10 +31,10 @@ const today = new Date();
 					>
 				</a>
 			</div>
-			<p class="text-gray-400 text-sm mb-4 md:mb-0">
+			<p class="order-3 md:order-2 text-gray-400 text-sm">
 				&copy; {today.getFullYear()} Numeolab. Tous droits réservés.
 			</p>
-			<div class="flex space-x-6">
+			<div class="order-2 md:order-3 flex space-x-6">
 				<a
 					href="/mentions-legales/"
 					class="text-gray-400 hover:text-gray-200 transition-colors text-sm"
