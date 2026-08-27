@@ -20,6 +20,7 @@ const { article } = Astro.props;
 	updatedDate={article.updatedAt ?? undefined}
 	heroImage={article.heroImageUrl ?? undefined}
 	slug={article.slug}
+	tags={article.tags}
 >
 	<div set:html={article.content} />
 </BlogPost>

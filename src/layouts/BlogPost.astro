@@ -13,9 +13,10 @@ interface Props {
   updatedDate?: Date;
   heroImage?: string;
   slug: string;
+  tags?: string[];
 }
 
-const { title, description, pubDate, updatedDate, heroImage, slug } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, slug, tags } = Astro.props;
 
 const pageUrl = Astro.url.href;
 const ogImage = slug ? new URL(`/og/${slug}.png`, Astro.site).href : undefined;
@@ -85,6 +86,17 @@ const blogPostingJsonLd = {
 						}
 					</div>
 					<h1>{title}</h1>
+					{
+						tags && tags.length > 0 && (
+							<div class="flex flex-wrap items-center gap-2 mt-3">
+								{tags.map((tag) => (
+									<span class="text-xs px-2 py-1 bg-indigo-900/50 text-indigo-300 rounded">
+										{tag}
+									</span>
+								))}
+							</div>
+						)
+					}
 					<hr />
 				</div>
 				<br />
