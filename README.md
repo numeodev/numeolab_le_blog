@@ -1,68 +1,48 @@
-# Astro Starter Kit: Blog
+# Numeolab — Blog
 
-```sh
-npm create astro@latest -- --template blog
-```
+Blog "build-in-public" de Numeolab, propulsé par [Astro](https://astro.build) en mode statique, avec [Directus](https://directus.io) comme CMS headless et [Umami](https://umami.is) pour les statistiques.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
+Le site est déployé sur Cloudflare Pages.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-![blog](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
-
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## 🚀 Structure du projet
 
 ```text
-├── public/
+├── public/                  # Assets statiques (favicons, polices, robots.txt...)
 ├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
+│   ├── components/          # Composants Astro réutilisables
+│   ├── directus/            # Client Directus, schémas Zod, adaptateurs, loaders
+│   ├── layouts/              # Layouts de pages (article, page statique)
+│   ├── pages/                # Routes (file-based routing)
+│   ├── consts.ts             # Constantes globales du site
+│   └── content.config.ts     # Déclaration des collections Astro (articles, projets)
 ├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+├── wrangler.jsonc            # Config de déploiement Cloudflare Pages
+└── package.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Les contenus (articles, projets) ne sont pas des fichiers Markdown locaux : ils sont chargés à la compilation depuis une instance Directus via les loaders définis dans `src/directus/`.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## ⚙️ Variables d'environnement
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+| Variable | Description |
+| :--- | :--- |
+| `DIRECTUS_URL` | URL de l'instance Directus utilisée comme source de contenu |
+| `DIRECTUS_TOKEN` | Token d'accès (optionnel) pour l'API Directus |
+| `PUBLIC_UMAMI_SCRIPT_URL` | URL du script Umami (analytics, chargé uniquement en production) |
+| `PUBLIC_UMAMI_WEBSITE_ID` | Identifiant du site sur Umami |
 
-Any static assets, like images, can be placed in the `public/` directory.
+## 🧞 Commandes
 
-## 🧞 Commands
+Toutes les commandes s'exécutent à la racine du projet, depuis un terminal :
 
-All commands are run from the root of the project, from a terminal:
+| Commande | Action |
+| :--- | :--- |
+| `npm install` | Installe les dépendances |
+| `npm run dev` | Démarre le serveur local sur `localhost:4321` |
+| `npm run build` | Build le site en statique dans `./dist/` |
+| `npm run preview` | Prévisualise le build en local avant déploiement |
+| `npm run astro -- check` | Vérifie les types (utilisé en CI) |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## 👀 Pour aller plus loin
 
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+Voir la [documentation Astro](https://docs.astro.build) et la [documentation Directus](https://directus.io/docs).

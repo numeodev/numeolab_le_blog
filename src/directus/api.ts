@@ -51,7 +51,7 @@ function warnIfUnavailable(err: unknown): void {
   console.warn('[Directus] Instance unreachable — building with empty content.');
 }
 
-export function getAssetUrl(fileId: string): string {
+function getAssetUrl(fileId: string): string {
   return `${getBaseUrl()}/assets/${fileId}`;
 }
 
