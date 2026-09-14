@@ -27,6 +27,6 @@
     "typescript": "^6.0.3"
   },
   "devDependencies": {
-    "astro-compress": "^2.3.8"
+    "astro-compress": "^2.4.3"
   }
 }
