@@ -123,12 +123,22 @@ const websiteJsonLd = {
 
 <!-- Umami Analytics (self-hosted) -->
 {import.meta.env.PROD && import.meta.env.PUBLIC_UMAMI_SCRIPT_URL && import.meta.env.PUBLIC_UMAMI_WEBSITE_ID && (
-  <script
-    is:inline
-    async
-    defer
-    src={import.meta.env.PUBLIC_UMAMI_SCRIPT_URL}
-    data-website-id={import.meta.env.PUBLIC_UMAMI_WEBSITE_ID}
-    data-domains="numeolab.fr"
-  />
+  <>
+    <script is:inline>
+      function umamiBeforeSend(type, payload) {
+        // Filtre les navigateurs pilotés par automatisation (Puppeteer, Playwright, Selenium...)
+        if (navigator.webdriver) return null;
+        return payload;
+      }
+    </script>
+    <script
+      is:inline
+      async
+      defer
+      src={import.meta.env.PUBLIC_UMAMI_SCRIPT_URL}
+      data-website-id={import.meta.env.PUBLIC_UMAMI_WEBSITE_ID}
+      data-domains="numeolab.fr"
+      data-before-send="umamiBeforeSend"
+    />
+  </>
 )}
