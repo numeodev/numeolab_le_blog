@@ -47,15 +47,15 @@ const total = allEntries.length;
                 <p class="text-gray-300 mb-6 line-clamp-3 overflow-hidden">
                   {project.content?.replace(/<[^>]+>/g, '')}
                 </p>
-                <div class="flex flex-wrap gap-2 mb-6">
-                  {
-                    project.stack.map((tech) => (
+                {project.stack.length > 0 && (
+                  <div class="flex flex-wrap gap-2 mb-6">
+                    {project.stack.map((tech) => (
                       <span class="text-xs px-2 py-1 bg-indigo-900/50 text-violet-300 rounded">
                         {tech}
                       </span>
-                    ))
-                  }
-                </div>
+                    ))}
+                  </div>
+                )}
                 {(project.projectUrl || project.projectRepo) && (
                   <div class="flex space-x-4">
                     {project.projectUrl && (

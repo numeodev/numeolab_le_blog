@@ -11,7 +11,7 @@ export const directusArticleSchema = z.object({
   description: z.string(),
   content: z.string(),
   featured_image: z.string().nullable(),
-  tags: z.array(z.string()),
+  tags: z.array(z.string()).nullable().transform((v) => v ?? []),
   meta_title: z.string().nullable(),
   meta_description: z.string().nullable(),
 });
@@ -27,7 +27,7 @@ export const directusProjectSchema = z.object({
   content: z.string().nullable(),
   project_url: z.string().nullable(),
   project_repo: z.string().nullable(),
-  stack: z.array(z.string()),
+  stack: z.array(z.string()).nullish().transform((v) => v ?? []),
 });
 
 export type DirectusArticleRaw = z.infer<typeof directusArticleSchema>;
