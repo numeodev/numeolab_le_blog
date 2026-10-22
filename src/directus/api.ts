@@ -55,6 +55,21 @@ function getAssetUrl(fileId: string): string {
   return `${getBaseUrl()}/assets/${fileId}`;
 }
 
+// L'éditeur Directus insère les images avec l'URL depuis laquelle l'admin est
+// ouvert (ex. le tailnet) : on les rebase sur DIRECTUS_URL et on retire les
+// paramètres vides (`width=undefined`) ajoutés pour les SVG.
+const CONTENT_ASSET_URL = /https?:\/\/[^\s"'<>]+?\/assets\/([0-9a-f-]{36})(\.[a-z0-9]+)?(\?[^\s"'<>]*)?/gi;
+
+function rebaseContentAssets(html: string): string {
+  return html.replace(CONTENT_ASSET_URL, (_, fileId: string, extension = '', query = '') => {
+    const params = query
+      .slice(1)
+      .split('&amp;')
+      .filter((param: string) => param && !param.endsWith('=undefined'));
+    return getAssetUrl(fileId) + extension + (params.length ? `?${params.join('&amp;')}` : '');
+  });
+}
+
 // ── Articles ────────────────────────────────────────────────────────────────
 
 const ARTICLE_FIELDS = [
@@ -71,7 +86,8 @@ export async function getAllArticles(): Promise<Article[]> {
       limit: '-1',
       fields: ARTICLE_FIELDS.join(','),
     });
-    return directusArticleSchema.array().parse(res.data).map(a => toArticle(a, getAssetUrl));
+    return directusArticleSchema.array().parse(res.data)
+      .map(a => toArticle({ ...a, content: rebaseContentAssets(a.content) }, getAssetUrl));
   } catch (err) {
     warnIfUnavailable(err);
     return [];
@@ -94,7 +110,8 @@ export async function getAllProjects(): Promise<Project[]> {
       limit: '-1',
       fields: PROJECT_FIELDS.join(','),
     });
-    return directusProjectSchema.array().parse(res.data).map(toProject);
+    return directusProjectSchema.array().parse(res.data)
+      .map(p => toProject({ ...p, content: p.content && rebaseContentAssets(p.content) }));
   } catch (err) {
     warnIfUnavailable(err);
     return [];
