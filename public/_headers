@@ -1,7 +1,4 @@
-# Fonts et assets Vite hachés — immutables
-/fonts/*
-  Cache-Control: public, max-age=31536000, immutable
-
+# Assets Vite hachés (dont les polices) — immutables
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 

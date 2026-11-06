@@ -1,57 +1,91 @@
 ---
-import HeaderLink from '../components/HeaderLink.astro';
+import Arc from './Arc.astro';
+import Icon from './Icon.astro';
+
+const axes = [
+	{ title: 'Génie logiciel', text: 'Architecture, décisions de conception, qualité et outillage.' },
+	{ title: 'Ingénierie de la résilience', text: 'Systèmes complexes, incidents, sûreté de fonctionnement.' },
+	{ title: 'Ergonomie et sciences cognitives', text: 'Charge cognitive, prise de décision, interaction humain–agent.' },
+];
 ---
 
-<section class="py-20 px-4">
-  <div class="container mx-auto max-w-6xl">
-    <div class="flex flex-col lg:flex-row items-center">
-      <div class="lg:w-1/2 mb-10 lg:mb-0 lg:mr-6">
-        <h1 class="text-4xl md:text-5xl font-bold mb-6">
-          <span class="gradient-text">Code, projets, et ce que j'apprends en chemin.</span>
-        </h1>
-        <p class="text-lg text-gray-300 mb-8">
-          Articles technique sur le génie logiciel, le développement, et la conception produit.
-          Décisions d'architecture, projets perso, et leçons apprises.
-        </p>
-        <div class="flex space-x-4">
-          <HeaderLink href="/blog/" class="px-6 py-3 bg-indigo-600 border border-indigo-500 rounded-lg font-medium hover:bg-indigo-500 transition-colors">
-            Lire le blog
-          </HeaderLink>
-          <HeaderLink href="/projets/" class="px-6 py-3 border border-indigo-500/40 text-indigo-300 rounded-lg font-medium hover:bg-indigo-900/30 transition-colors">
-            Projets
-          </HeaderLink>
-        </div>
-      </div>
-      <div class="hidden lg:block lg:w-1/2 relative">
-        <div class="glass-effect p-6 rounded-xl border border-gray-700">
-          <div class="flex space-x-2 mb-4">
-            <div class="w-3 h-3 rounded-full bg-red-500"></div>
-            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <div class="w-3 h-3 rounded-full bg-green-500"></div>
-          </div>
-          <div class="code-font text-sm space-y-1">
-            <p><span class="text-green-400">$</span> <span class="text-white">whoami</span></p>
-            <p class="pl-2"><a href="/a-propos/" class="text-indigo-400 hover:text-indigo-300 transition-colors">→ /about-me</a></p>
-            <p class="mt-2"><span class="text-green-400">$</span> <span class="text-white">cat now.txt</span></p>
-            <p class="text-gray-400">&gt; Software engineer.</p>
-            <p class="text-gray-400">&gt; Building things, writing about it.</p>
-            <p class="text-gray-400">&gt; Currently: setting up this blog.</p>
-            <p class="mt-2 text-green-400">$ <span class="text-pink-400 blinking-cursor">|</span></p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<section class="hero">
+	<Arc variant="home" />
+	<div class="wrap hero__grid">
+		<div>
+			<p class="kicker mb-7">Blog technique · Mathurin Bourgouin</p>
+			<h1 class="hero__title">
+				Génie logiciel, résilience et <em>ergonomie cognitive</em>.
+			</h1>
+			<p class="lead mb-10 max-w-[34em]">
+				Analyses, retours d'expérience et notes de lecture sur la conception de systèmes logiciels fiables — et sur ce
+				que les agents IA changent pour leur exploitation, leur test et leur gouvernance.
+			</p>
+			<div class="flex flex-wrap gap-3">
+				<a href="/blog/" class="btn btn--primary" data-astro-prefetch>Lire les articles<Icon name="arrow-right" size={16} /></a>
+				<a href="/rss.xml" class="btn btn--ghost">S'abonner par RSS</a>
+			</div>
+		</div>
+		<div>
+			<p class="kicker mb-2 text-muted">Axes éditoriaux</p>
+			<ol class="list-none m-0 p-0">
+				{axes.map((axe, i) => (
+					<li class="flex gap-5 py-[22px] border-b border-line">
+						<span class="font-mono text-[13px] text-signal pt-[3px]">{String(i + 1).padStart(2, '0')}</span>
+						<div>
+							<p class="m-0 mb-1.5 font-semibold">{axe.title}</p>
+							<p class="m-0 text-sm leading-relaxed text-muted">{axe.text}</p>
+						</div>
+					</li>
+				))}
+			</ol>
+		</div>
+	</div>
 </section>
 
 <style>
-  .blinking-cursor {
-    animation: blink 1s step-end infinite;
-    will-change: opacity;
-  }
+	.hero {
+		position: relative;
+		overflow: hidden;
+		isolation: isolate;
+		padding: 104px 0 150px;
+		border-bottom: 1px solid var(--color-line-strong);
+	}
 
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
+	.hero__grid {
+		display: grid;
+		grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+		gap: 72px;
+		align-items: start;
+	}
+
+	.hero__title {
+		margin: 0 0 28px;
+		font-size: 3.25rem;
+		line-height: 1.1;
+		font-weight: 600;
+		letter-spacing: -0.025em;
+		color: var(--color-paper);
+	}
+
+	.hero__title em {
+		font-style: italic;
+		font-weight: 500;
+		color: var(--color-signal-light);
+	}
+
+	@media (max-width: 860px) {
+		.hero {
+			padding: 72px 0 140px;
+		}
+
+		.hero__grid {
+			grid-template-columns: 1fr;
+			gap: 48px;
+		}
+
+		.hero__title {
+			font-size: 2.25rem;
+		}
+	}
 </style>

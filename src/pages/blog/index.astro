@@ -1,58 +1,20 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import Pagination from '../../components/Pagination.astro';
-import ArticleListItem from '../../components/ArticleListItem.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import ArticleIndex from '../../layouts/ArticleIndex.astro';
+import { SITE_TITLE } from '../../consts';
 import { POSTS_PER_PAGE } from '../../directus/api';
+import { getArticleEntries, getThemes } from '../../lib/entries';
 
-const allEntries = await getCollection('articles');
-const articles = allEntries.map((e) => e.data);
+const articles = await getArticleEntries();
 const totalPages = Math.ceil(articles.length / POSTS_PER_PAGE);
-const pageArticles = articles.slice(0, POSTS_PER_PAGE);
 ---
 
-<!doctype html>
-<html lang="fr">
-	<head>
-		<BaseHead title={`${SITE_TITLE} - Blog`} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section class="py-16 px-4 bg-gradient-to-b from-indigo-900/20 to-transparent">
-				<div class="container mx-auto max-w-4xl">
-					<div class="mb-8 text-center">
-						<h1 class="text-3xl font-bold mb-4 gradient-text">Blog</h1>
-					</div>
-					{pageArticles.length === 0 ? (
-						<div class="flex flex-col items-center justify-center py-20 text-center">
-							<div class="w-16 h-16 mb-6 rounded-full bg-indigo-900/30 border border-indigo-700/40 flex items-center justify-center">
-								<i class="fas fa-pen-nib text-2xl text-indigo-400/60" aria-hidden="true"></i>
-							</div>
-							<p class="text-gray-300 text-lg font-medium mb-2">Aucun article pour l'instant</p>
-							<p class="text-gray-500 text-sm max-w-sm">
-								Les premiers articles sont en cours de rédaction — revenez bientôt.
-							</p>
-						</div>
-					) : (
-						<ul class="flex flex-col gap-12">
-							{pageArticles.map((article) => <ArticleListItem article={article} />)}
-						</ul>
-					)}
-
-					{totalPages > 1 && (
-						<Pagination
-							currentPage={1}
-							totalPages={totalPages}
-							baseUrl="/blog"
-						/>
-					)}
-				</div>
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
+<ArticleIndex
+	pageTitle={`Articles — ${SITE_TITLE}`}
+	description="Analyses, retours d'expérience et notes de lecture sur la conception, l'exploitation et la gouvernance des systèmes logiciels."
+	kicker={`Articles · ${articles.length} entrée${articles.length > 1 ? 's' : ''}`}
+	heading="Toutes les publications"
+	intro="Analyses, retours d'expérience et notes de lecture sur la conception, l'exploitation et la gouvernance des systèmes logiciels."
+	articles={articles.slice(0, POSTS_PER_PAGE)}
+	themes={getThemes(articles)}
+	pagination={{ currentPage: 1, totalPages }}
+/>

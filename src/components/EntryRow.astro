@@ -1,0 +1,43 @@
+---
+import type { ArticleEntry } from '../lib/entries';
+import FormattedDate from './FormattedDate.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+	article: ArticleEntry;
+	/** Dans une liste groupée par année, la date s'affiche sans l'année. */
+	dateFormat?: 'short' | 'day-month';
+	showTags?: boolean;
+}
+
+const { article, dateFormat = 'short', showTags = false } = Astro.props;
+---
+
+<li class="entry">
+	<a href={`/blog/${article.slug}/`} class="entry-row">
+		<span class="meta flex flex-col gap-1.5">
+			<span class="text-signal">N° {article.number}</span>
+			<FormattedDate date={article.publishedAt} format={dateFormat} />
+		</span>
+		<span>
+			<span class="entry-title mb-2.5">{article.title}</span>
+			<span class="block text-[15px] leading-relaxed text-muted max-w-[44em]">{article.description}</span>
+			{showTags && article.tags.length > 0 && (
+				<span class="flex flex-wrap gap-2 mt-3.5">
+					{article.tags.map((tag) => <span class="tag">{tag}</span>)}
+				</span>
+			)}
+		</span>
+		<Icon name="arrow-right" class="entry-arrow text-muted" />
+	</a>
+</li>
+
+<style>
+	.entry {
+		border-bottom: 1px solid var(--color-line);
+	}
+
+	.entry-row {
+		padding: 30px 0;
+	}
+</style>
