@@ -1,25 +1,34 @@
 ---
-import { getCollection } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import { getArticleEntries, withHeadingIds, type ArticleEntry } from '../../lib/entries';
 
 export async function getStaticPaths() {
-	const entries = await getCollection('articles');
-	return entries.map((entry) => ({
-		params: { slug: entry.id },
-		props: { article: entry.data },
-	}));
+	const articles = await getArticleEntries();
+	return articles.map((article) => {
+		const series = article.series;
+		const inSeries = (part: number) =>
+			series ? articles.find((a) => a.series?.name === series.name && a.series.part === part) : undefined;
+		return {
+			params: { slug: article.slug },
+			props: {
+				article,
+				previousPart: series ? inSeries(series.part - 1) : undefined,
+				nextPart: series ? inSeries(series.part + 1) : undefined,
+			},
+		};
+	});
 }
 
-const { article } = Astro.props;
+interface Props {
+	article: ArticleEntry;
+	previousPart?: ArticleEntry;
+	nextPart?: ArticleEntry;
+}
+
+const { article, previousPart, nextPart } = Astro.props;
+const { html, headings } = withHeadingIds(article.content);
 ---
 
-<BlogPost
-	title={article.title}
-	description={article.metaDescription || article.description}
-	pubDate={article.publishedAt}
-	updatedDate={article.updatedAt ?? undefined}
-	heroImage={article.heroImageUrl ?? undefined}
-	slug={article.slug}
->
-	<div set:html={article.content} />
+<BlogPost article={article} headings={headings} previousPart={previousPart} nextPart={nextPart}>
+	<Fragment set:html={html} />
 </BlogPost>

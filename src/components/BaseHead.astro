@@ -1,6 +1,13 @@
 ---
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-500.css';
+import '@fontsource/ibm-plex-sans/latin-600.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import { LANGUAGE, SITE_AUTHOR, SITE_LOCALE, SITE_TITLE, SITE_URL } from '../consts.ts';
@@ -14,7 +21,7 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, ogImage, type = 'website' } = Astro.props;
+const { title, description, ogImage = new URL('/og/site.png', Astro.site).href, type = 'website' } = Astro.props;
 
 const websiteJsonLd = {
   "@context": "https://schema.org",
@@ -48,6 +55,7 @@ const websiteJsonLd = {
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="theme-color" content="#0B1220" />
 <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="shortcut icon" href="/favicon.ico" />
@@ -64,31 +72,6 @@ const websiteJsonLd = {
 
 <!-- View Transitions: navigation client-side, header persistant -->
 <ClientRouter />
-
-<!-- Critical Font preloads -->
-<link
-    rel="preload"
-    href="/fonts/Inter-VariableFont_opsz,wght.ttf"
-    as="font"
-    type="font/ttf"
-    crossorigin
-    fetchpriority="high"
-/>
-<link
-    rel="preload"
-    href="/fonts/FiraCode-Regular.ttf"
-    as="font"
-    type="font/ttf"
-    crossorigin
-/>
-
-<!-- Font Awesome with display strategy -->
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-    media="print"
-    onload="this.media='all'"
-/>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
@@ -113,22 +96,34 @@ const websiteJsonLd = {
 <meta property="og:description" content={description} />
 <meta property="og:site_name" content={SITE_TITLE} />
 <meta property="og:locale" content={SITE_LOCALE} />
-{ogImage && <meta property="og:image" content={ogImage} />}
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 
 <!-- Twitter Card -->
-<meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-{ogImage && <meta name="twitter:image" content={ogImage} />}
+<meta name="twitter:image" content={ogImage} />
 
 <!-- Umami Analytics (self-hosted) -->
 {import.meta.env.PROD && import.meta.env.PUBLIC_UMAMI_SCRIPT_URL && import.meta.env.PUBLIC_UMAMI_WEBSITE_ID && (
-  <script
-    is:inline
-    async
-    defer
-    src={import.meta.env.PUBLIC_UMAMI_SCRIPT_URL}
-    data-website-id={import.meta.env.PUBLIC_UMAMI_WEBSITE_ID}
-    data-domains="numeolab.fr"
-  />
+  <>
+    <script is:inline>
+      function umamiBeforeSend(type, payload) {
+        // Filtre les navigateurs pilotés par automatisation (Puppeteer, Playwright, Selenium...)
+        if (navigator.webdriver) return null;
+        return payload;
+      }
+    </script>
+    <script
+      is:inline
+      async
+      defer
+      src={import.meta.env.PUBLIC_UMAMI_SCRIPT_URL}
+      data-website-id={import.meta.env.PUBLIC_UMAMI_WEBSITE_ID}
+      data-domains="numeolab.fr"
+      data-before-send="umamiBeforeSend"
+    />
+  </>
 )}
