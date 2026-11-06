@@ -1,0 +1,39 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ArticleIndex from '../../../layouts/ArticleIndex.astro';
+import { SITE_TITLE } from '../../../consts';
+import { getArticleEntries, getThemes, type ArticleEntry, type Theme } from '../../../lib/entries';
+
+export const getStaticPaths = (async () => {
+	const allArticles = await getArticleEntries();
+	const themes = getThemes(allArticles);
+
+	return themes.map((theme) => ({
+		params: { theme: theme.slug },
+		props: {
+			theme,
+			themes,
+			articles: allArticles.filter((article) => article.tags.includes(theme.name as ArticleEntry['tags'][number])),
+		},
+	}));
+}) satisfies GetStaticPaths;
+
+interface Props {
+	theme: Theme;
+	themes: Theme[];
+	articles: ArticleEntry[];
+}
+
+const { theme, themes, articles } = Astro.props;
+---
+
+<ArticleIndex
+	pageTitle={`${theme.name} — Articles — ${SITE_TITLE}`}
+	description={`Les articles de Numeolab sur le thème « ${theme.name} ».`}
+	kicker={`Thème · ${articles.length} entrée${articles.length > 1 ? 's' : ''}`}
+	heading={theme.name}
+	intro={`Les articles classés sous le thème « ${theme.name} », du plus récent au plus ancien.`}
+	articles={articles}
+	themes={themes}
+	currentTheme={theme.slug}
+/>

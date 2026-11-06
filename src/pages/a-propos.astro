@@ -2,82 +2,155 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import Icon from '../components/Icon.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { SITE_AUTHOR, SITE_TITLE } from '../consts';
+
+const contacts = [
+	{ icon: 'mail', label: 'Email', handle: 'contact@numeolab.fr', href: 'mailto:contact@numeolab.fr' },
+	{ icon: 'linkedin', label: 'LinkedIn', handle: 'mathurin-bourgouin', href: 'https://www.linkedin.com/in/mathurin-bourgouin-365336291/' },
+	{ icon: 'bluesky', label: 'Bluesky', handle: '@ryzel69.bsky.social', href: 'https://bsky.app/profile/ryzel69.bsky.social' },
+	{ icon: 'github', label: 'GitHub', handle: 'numeodev', href: 'https://github.com/numeodev' },
+] as const;
 ---
 
 <!doctype html>
 <html lang="fr">
 	<head>
-		<BaseHead title={`${SITE_TITLE} - À Propos`} description={SITE_DESCRIPTION} />
+		<BaseHead
+			title={`À propos — ${SITE_TITLE}`}
+			description={`${SITE_AUTHOR}, développeur full stack .NET et auteur de Numeolab : parcours, sujets du blog et contact.`}
+		/>
 	</head>
-	<body class="flex flex-col min-h-screen">
+	<body>
 		<Header />
-		<main class="flex-grow flex items-center justify-center py-6 md:py-10 px-4 bg-gradient-to-b from-indigo-900/20 to-transparent">
-			<div class="container mx-auto max-w-3xl w-full">
-				<div class="glass-effect rounded-xl p-6 sm:p-8 md:p-10 lg:p-12 border border-gray-700">
+		<main>
+			<PageHeader kicker="À propos" title={SITE_AUTHOR} intro="Développeur full stack .NET · Auteur de Numeolab" />
 
-					<p class="code-font text-sm text-gray-500 mb-3 tracking-widest uppercase">À PROPOS</p>
-
-					<h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 md:mb-8 leading-tight">
-						<span class="gradient-text">Qui suis-je ?</span>
-					</h1>
-
-					<div class="space-y-4 md:space-y-5 text-gray-300 text-base sm:text-lg leading-relaxed mb-8 md:mb-10">
+			<section class="py-20 pb-28">
+				<div class="wrap about">
+					<div class="about__text">
+						<h2>Parcours</h2>
 						<p>
-							Développeur full-stack .Net depuis quatre ans, avec un goût prononcé pour
-							l'expérimentation technique. Je passe du temps à explorer les outils,
-							bibliothèques, frameworks et processus d'ingénierie logicielle qui m'intéressent
-							— puis j'écris sur ce que j'y trouve.
+							Développeur full stack .NET, je m'intéresse à la manière dont on conçoit, exploite et fait évoluer des
+							systèmes logiciels fiables : les choix d'architecture, l'outillage, les processus d'ingénierie et ce qu'ils
+							deviennent face à la réalité de la production.
 						</p>
+
+						<h2>Numeolab</h2>
 						<p>
-							Numeolab est mon blog où je documente ce processus honnêtement :
-							les succès, les impasses, et les évènements qui m'ont surpris en chemin,
-							mais aussi les coulisses de mes projets.
+							Numeolab est l'endroit où je publie mes analyses, mes retours d'expérience et mes notes de lecture. Les
+							articles croisent trois domaines — le génie logiciel, l'ingénierie de la résilience et l'ergonomie
+							cognitive — avec un intérêt particulier pour la gouvernance des agents IA en production.
 						</p>
+						<p class="about__last">J'y documente aussi les projets que je conçois, publiés ou en cours de construction.</p>
+
+						<a href="/blog/" class="btn btn--primary" data-astro-prefetch>Lire les articles<Icon name="arrow-right" size={16} /></a>
 					</div>
 
-					<div class="border-t border-gray-700/60 mb-6 md:mb-8"></div>
-
-					<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-						<div class="flex space-x-3">
-							<a
-								href="mailto:contact@numeolab.fr"
-								class="w-11 h-11 rounded-lg bg-indigo-900/40 border border-indigo-700/50 flex items-center justify-center text-indigo-400 hover:bg-indigo-900/70 hover:border-indigo-400 transition-colors"
-								aria-label="Email"
-							>
-								<i class="fas fa-envelope"></i>
-							</a>
-							<a
-								href="https://www.linkedin.com/in/mathurin-bourgouin-365336291/"
-								class="w-11 h-11 rounded-lg bg-indigo-900/40 border border-indigo-700/50 flex items-center justify-center text-indigo-400 hover:bg-indigo-900/70 hover:border-indigo-400 transition-colors"
-								aria-label="LinkedIn"
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								<i class="fab fa-linkedin-in"></i>
-							</a>
-							<a
-								href="https://bsky.app/profile/ryzel69.bsky.social"
-								class="w-11 h-11 rounded-lg bg-indigo-900/40 border border-indigo-700/50 flex items-center justify-center text-indigo-400 hover:bg-indigo-900/70 hover:border-indigo-400 transition-colors"
-								aria-label="BlueSky"
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								<i class="fab fa-bluesky"></i>
-							</a>
-						</div>
-
-						<a
-							href="/blog/"
-							class="inline-flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
-						>
-							Lire le blog <i class="fas fa-arrow-right" aria-hidden="true"></i>
-						</a>
-					</div>
-
+					<aside aria-labelledby="contact-title" class="contact">
+						<h2 id="contact-title" class="contact__title">Contact</h2>
+						<ul class="list-none m-0 p-0">
+							{contacts.map(({ icon, label, handle, href }) => (
+								<li>
+									<a
+										href={href}
+										class="contact__link"
+										{...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+									>
+										<Icon name={icon} size={18} class="text-muted shrink-0" />
+										<span class="flex-1">
+											<span class="block text-[13px] text-muted mb-0.5">{label}</span>
+											<span class="contact__handle">{handle}</span>
+										</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</aside>
 				</div>
-			</div>
+			</section>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.about {
+		display: grid;
+		grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+		gap: 80px;
+		align-items: start;
+	}
+
+	.about__text {
+		font-size: 18px;
+		line-height: 1.75;
+		color: var(--color-body);
+	}
+
+	.about__text h2 {
+		margin: 56px 0 16px;
+		font-size: 26px;
+		line-height: 1.3;
+		font-weight: 600;
+		color: var(--color-paper);
+	}
+
+	.about__text h2:first-child {
+		margin-top: 0;
+	}
+
+	.about__text p {
+		margin: 0 0 28px;
+	}
+
+	.about__text .about__last {
+		margin-bottom: 40px;
+	}
+
+	.contact {
+		border: 1px solid var(--color-line-strong);
+		border-radius: 8px;
+		background: var(--color-surface);
+		padding: 28px 28px 12px;
+	}
+
+	.contact__title {
+		margin: 0 0 8px;
+		font-size: 20px;
+		line-height: 1.3;
+		font-weight: 600;
+		color: var(--color-paper);
+	}
+
+	.contact li + li {
+		border-top: 1px solid var(--color-line);
+	}
+
+	.contact__link {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		min-height: 64px;
+		color: var(--color-text);
+	}
+
+	.contact__handle {
+		display: block;
+		font-family: var(--font-mono);
+		font-size: 14px;
+		color: var(--color-text);
+	}
+
+	.contact__link:hover .contact__handle {
+		color: #fff;
+	}
+
+	@media (max-width: 860px) {
+		.about {
+			grid-template-columns: 1fr;
+			gap: 56px;
+		}
+	}
+</style>
