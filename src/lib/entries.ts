@@ -109,14 +109,31 @@ export interface Heading {
 
 const HEADING = /<h([23])([^>]*)>([\s\S]*?)<\/h\1>/gi;
 
-const decodeEntities = (s: string) =>
-  s
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#0?39;|&rsquo;/g, '’');
+const ENTITIES: Record<string, string> = {
+  nbsp: ' ',
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  '#39': '’',
+  '#039': '’',
+  rsquo: '’',
+};
+
+// Une seule passe : « &amp;lt; » donne « &lt; », pas « < ».
+const decodeEntities = (s: string) => s.replace(/&(nbsp|amp|lt|gt|quot|#0?39|rsquo);/g, (_, name: string) => ENTITIES[name]);
+
+// Répété jusqu'à stabilité pour qu'un retrait ne recompose pas une balise
+// (« <scr<b>ipt> »), puis suppression des « < » orphelins.
+const stripTags = (html: string) => {
+  let previous: string;
+  let text = html;
+  do {
+    previous = text;
+    text = text.replace(/<[^>]*>/g, '');
+  } while (text !== previous);
+  return text.replaceAll('<', '');
+};
 
 /** Ajoute un `id` aux intertitres h2/h3 du contenu et en extrait le sommaire. */
 export function withHeadingIds(html: string): { html: string; headings: Heading[] } {
@@ -124,7 +141,7 @@ export function withHeadingIds(html: string): { html: string; headings: Heading[
   const used = new Set<string>();
 
   const result = html.replace(HEADING, (_, level: string, attrs: string, inner: string) => {
-    const text = decodeEntities(inner.replace(/<[^>]+>/g, '')).trim();
+    const text = decodeEntities(stripTags(inner)).trim();
     const existing = attrs.match(/\sid=["']([^"']+)["']/)?.[1];
     let id = existing ?? (slugify(text) || 'section');
     if (!existing) {
