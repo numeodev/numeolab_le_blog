@@ -1,109 +1,234 @@
 ---
+import Arc from '../components/Arc.astro';
 import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import ImageLightbox from '../components/ImageLightbox.astro';
 import SocialShare from '../components/SocialShare.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 import { SITE_AUTHOR, SITE_TITLE, SITE_URL, LANGUAGE } from '../consts.ts';
+import { slugify, type ArticleEntry, type Heading } from '../lib/entries';
 
 interface Props {
-  title: string;
-  description: string;
-  pubDate: Date;
-  updatedDate?: Date;
-  heroImage?: string;
-  slug: string;
-  tags?: string[];
+	article: ArticleEntry;
+	headings: Heading[];
+	previousPart?: ArticleEntry;
+	nextPart?: ArticleEntry;
 }
 
-const { title, description, pubDate, updatedDate, heroImage, slug, tags } = Astro.props;
+const { article, headings, previousPart, nextPart } = Astro.props;
+const { title, headline, series, number, publishedAt, updatedAt, heroImageUrl, tags, slug } = article;
+const description = article.metaDescription || article.description;
 
 const pageUrl = Astro.url.href;
-const ogImage = slug ? new URL(`/og/${slug}.png`, Astro.site).href : undefined;
+const ogImage = new URL(`/og/${slug}.png`, Astro.site).href;
+const showToc = headings.length >= 2;
 
 const blogPostingJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": title,
-  "description": description,
-  "url": pageUrl,
-  "datePublished": pubDate instanceof Date ? pubDate.toISOString() : new Date(pubDate).toISOString(),
-  "dateModified": updatedDate
-    ? (updatedDate instanceof Date ? updatedDate.toISOString() : new Date(updatedDate).toISOString())
-    : (pubDate instanceof Date ? pubDate.toISOString() : new Date(pubDate).toISOString()),
-  "author": {
-    "@type": "Person",
-    "@id": `${SITE_URL}/#author`,
-    "name": SITE_AUTHOR,
-    "url": `${SITE_URL}/a-propos/`
-  },
-  "publisher": {
-    "@type": "Organization",
-    "@id": `${SITE_URL}/#website`,
-    "name": SITE_TITLE,
-    "url": SITE_URL
-  },
-  "inLanguage": LANGUAGE,
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": pageUrl
-  },
-  ...(ogImage ? { "image": ogImage } : {})
+	'@context': 'https://schema.org',
+	'@type': 'BlogPosting',
+	headline: title,
+	description,
+	url: pageUrl,
+	datePublished: publishedAt.toISOString(),
+	dateModified: (updatedAt ?? publishedAt).toISOString(),
+	author: {
+		'@type': 'Person',
+		'@id': `${SITE_URL}/#author`,
+		name: SITE_AUTHOR,
+		url: `${SITE_URL}/a-propos/`,
+	},
+	publisher: {
+		'@type': 'Organization',
+		'@id': `${SITE_URL}/#website`,
+		name: SITE_TITLE,
+		url: SITE_URL,
+	},
+	inLanguage: LANGUAGE,
+	mainEntityOfPage: {
+		'@type': 'WebPage',
+		'@id': pageUrl,
+	},
+	image: ogImage,
 };
-
 ---
 
+<!doctype html>
 <html lang="fr">
 	<head>
-		<BaseHead title={title} description={description} ogImage={ogImage} type="article" />
+		<BaseHead title={article.metaTitle || title} description={description} ogImage={ogImage} type="article" />
 		<script is:inline type="application/ld+json" set:html={JSON.stringify(blogPostingJsonLd)} />
 	</head>
 
 	<body>
 		<Header />
 		<main>
-			<article class="blog-content mx-auto px-4 sm:px-6 py-8">
-				{heroImage && (
-					<div class="hero-image">
-						<img
-							src={heroImage}
-							alt={`Image illustrant l'article : ${title}`}
-							loading="eager"
-							fetchpriority="high"
-							class="w-full"
-						/>
-					</div>
-				)}
-				<div class="title py-4">
-					<div class="date">
-						<FormattedDate date={pubDate} />
-						{
-							updatedDate && (
-								<div class="last-updated-on">
-									Mis à jour le <FormattedDate date={updatedDate} />
-								</div>
-							)
-						}
-					</div>
-					<h1>{title}</h1>
-					{
-						tags && tags.length > 0 && (
-							<div class="flex flex-wrap items-center gap-2 mt-3">
-								{tags.map((tag) => (
-									<span class="text-xs px-2 py-1 bg-indigo-900/50 text-indigo-300 rounded">
-										{tag}
-									</span>
-								))}
+			<article>
+				<header class="post-header">
+					<Arc />
+					<div class="read">
+						<nav aria-label="Fil d'Ariane" class="meta mb-10">
+							<a href="/blog/" class="text-muted hover:text-white">Articles</a><span aria-hidden="true" class="px-2.5 text-line-strong">/</span><span>{series?.name ?? headline}</span>
+						</nav>
+						<p class="meta tracking-[0.04em] text-signal mb-5">
+							N° {number}{series && ` · Partie ${series.part}/${series.total}`}
+						</p>
+						<h1 class="post-title">{headline}</h1>
+						<p class="m-0 mb-9 text-xl leading-relaxed text-muted">{article.description}</p>
+						<div class="meta flex flex-wrap items-center gap-x-6 gap-y-2.5">
+							<span>Publié le <FormattedDate date={publishedAt} format="long" /></span>
+							{updatedAt && <span>Révisé le <FormattedDate date={updatedAt} format="long" /></span>}
+						</div>
+						{tags.length > 0 && (
+							<div class="flex flex-wrap gap-2 mt-6">
+								{tags.map((tag) => <a href={`/blog/theme/${slugify(tag)}/`} class="tag">{tag}</a>)}
 							</div>
-						)
-					}
-					<hr />
+						)}
+					</div>
+				</header>
+
+				<div class:list={['post-body', { 'post-body--toc': showToc }]}>
+					<div class="read post-content">
+						{heroImageUrl && (
+							<img src={heroImageUrl} alt={`Image illustrant l'article : ${title}`} loading="eager" fetchpriority="high" class="hero-image" />
+						)}
+						<div class="prose">
+							<slot />
+						</div>
+					</div>
+					{showToc && <TableOfContents headings={headings} />}
 				</div>
-				<br />
-				<slot />
-				<SocialShare title={title} url={pageUrl} />
+
+				<footer class="read pt-8 pb-24">
+					<div class="border-t border-line pt-10">
+						{(previousPart || nextPart) && (
+							<div class="mb-12">
+								<p class="m-0 mb-4 text-[15px] font-medium">Dans la même série</p>
+								<nav class="series-nav" aria-label="Navigation dans la série">
+									{previousPart && (
+										<a href={`/blog/${previousPart.slug}/`} class="series-link" rel="prev">
+											<span class="meta block mb-2 text-xs">← N° {previousPart.number} · Partie {previousPart.series?.part}</span>
+											<span class="block text-base font-medium leading-snug">{previousPart.headline}</span>
+										</a>
+									)}
+									{nextPart && (
+										<a href={`/blog/${nextPart.slug}/`} class="series-link series-link--next" rel="next">
+											<span class="meta block mb-2 text-xs">N° {nextPart.number} · Partie {nextPart.series?.part} →</span>
+											<span class="block text-base font-medium leading-snug">{nextPart.headline}</span>
+										</a>
+									)}
+								</nav>
+							</div>
+						)}
+						<SocialShare title={title} url={pageUrl} />
+					</div>
+				</footer>
 			</article>
+			<ImageLightbox />
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.post-header {
+		position: relative;
+		overflow: hidden;
+		isolation: isolate;
+		padding: 72px 0 64px;
+		background: var(--color-surface);
+		border-bottom: 1px solid var(--color-line-strong);
+	}
+
+	.post-title {
+		margin: 0 0 24px;
+		font-size: 2.75rem;
+		line-height: 1.15;
+		font-weight: 600;
+		letter-spacing: -0.025em;
+		color: var(--color-paper);
+	}
+
+	.post-content {
+		padding-top: 72px;
+		padding-bottom: 24px;
+	}
+
+	.hero-image {
+		display: block;
+		width: 100%;
+		height: auto;
+		margin-bottom: 48px;
+		border-radius: 8px;
+		border: 1px solid var(--color-line);
+	}
+
+	/* Colonne de lecture centrée, sommaire dans la marge droite */
+	.post-body--toc {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 720px) minmax(0, 1fr);
+		max-width: 1440px;
+		margin: 0 auto;
+	}
+
+	.post-body--toc .post-content {
+		grid-column: 2;
+		margin: 0;
+		max-width: none;
+	}
+
+	.series-nav {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 16px;
+	}
+
+	.series-link {
+		display: block;
+		padding: 20px 22px;
+		border: 1px solid var(--color-line);
+		border-radius: 8px;
+		background: var(--color-surface);
+		color: var(--color-text);
+	}
+
+	.series-link:hover {
+		border-color: var(--color-line-hover);
+		color: var(--color-text);
+	}
+
+	.series-link--next {
+		grid-column: 2;
+		text-align: right;
+	}
+
+	@media (max-width: 1100px) {
+		.post-body--toc {
+			display: block;
+		}
+
+		.post-body--toc .post-content {
+			margin: 0 auto;
+			max-width: 720px;
+		}
+	}
+
+	@media (max-width: 860px) {
+		.post-title {
+			font-size: 2rem;
+		}
+
+		.post-content {
+			padding-top: 48px;
+		}
+
+		.series-nav {
+			grid-template-columns: 1fr;
+		}
+
+		.series-link--next {
+			grid-column: auto;
+		}
+	}
+</style>

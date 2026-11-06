@@ -1,0 +1,62 @@
+---
+import type { Theme } from '../lib/entries';
+
+interface Props {
+	themes: Theme[];
+	/** Slug du thème affiché, absent sur la liste complète. */
+	current?: string;
+}
+
+const { themes, current } = Astro.props;
+---
+
+{themes.length > 0 && (
+	<nav aria-label="Filtrer par thème" class="theme-filter">
+		<a href="/blog/" class="chip chip--all" aria-current={current ? undefined : 'page'}>Tous</a>
+		{themes.map((theme) => (
+			<a href={`/blog/theme/${theme.slug}/`} class="chip" aria-current={theme.slug === current ? 'page' : undefined}>
+				{theme.name}
+			</a>
+		))}
+	</nav>
+)}
+
+<style>
+	.theme-filter {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 48px;
+		padding: 20px 0;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		min-height: 36px;
+		padding: 0 14px;
+		border-radius: 6px;
+		border: 1px solid var(--color-line-strong);
+		color: var(--color-text);
+		font-family: var(--font-mono);
+		font-size: 14px;
+	}
+
+	.chip--all {
+		font-family: var(--font-sans);
+		font-weight: 500;
+	}
+
+	.chip:hover {
+		border-color: var(--color-signal);
+		color: #fff;
+	}
+
+	/* État actif : fond #1E293B et bordure Indigo signal */
+	.chip[aria-current='page'] {
+		background: var(--color-surface-2);
+		border-color: var(--color-signal);
+		color: #fff;
+	}
+</style>
