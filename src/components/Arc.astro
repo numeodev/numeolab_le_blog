@@ -1,0 +1,17 @@
+---
+// Motif : le cadran du logo agrandi en demi-cercle, posé sur le filet qui
+// ferme l'en-tête. Le parent doit être `position: relative; overflow: hidden;
+// isolation: isolate`.
+interface Props {
+	variant?: 'page' | 'home';
+}
+
+const { variant = 'page' } = Astro.props;
+const outerStroke = variant === 'home' ? '#263248' : '#334155';
+---
+
+<svg
+	class:list={['arc', { 'arc--home': variant === 'home' }]}
+	aria-hidden="true"
+	viewBox="0 0 360 185"
+	><circle cx="180" cy="185" r="170" fill="none" stroke={outerStroke} stroke-width="1.5" stroke-dasharray="1008 60" transform="rotate(-34.9 180 185)"></circle><circle cx="180" cy="185" r="115" fill="none" stroke="#1E293B" stroke-width="1"></circle><line x1="180" y1="185" x2="286" y2="79" stroke="#818CF8" stroke-width="2" stroke-linecap="round"></line><circle cx="180" cy="185" r="5" fill="#818CF8"></circle></svg>

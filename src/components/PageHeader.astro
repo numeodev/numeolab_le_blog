@@ -1,0 +1,40 @@
+---
+import Arc from './Arc.astro';
+
+interface Props {
+	kicker: string;
+	title: string;
+	intro?: string;
+	/** Le cyan est réservé aux réalisations. */
+	accent?: 'signal' | 'instrument';
+	/** Sans marge basse quand un élément (filtres) ferme l'en-tête. */
+	flush?: boolean;
+}
+
+const { kicker, title, intro, accent = 'signal', flush = false } = Astro.props;
+---
+
+<section aria-labelledby="page-title" class:list={['page-header', { 'page-header--flush': flush }]}>
+	<Arc />
+	<div class="wrap">
+		<p class:list={['kicker mb-5', { 'kicker--instrument': accent === 'instrument' }]}>{kicker}</p>
+		<h1 id="page-title" class="page-title mb-5">{title}</h1>
+		{intro && <p class="lead max-w-[38em]">{intro}</p>}
+		<slot />
+	</div>
+</section>
+
+<style>
+	.page-header {
+		position: relative;
+		overflow: hidden;
+		isolation: isolate;
+		padding: 80px 0 64px;
+		background: var(--color-surface);
+		border-bottom: 1px solid var(--color-line-strong);
+	}
+
+	.page-header--flush {
+		padding-bottom: 0;
+	}
+</style>
