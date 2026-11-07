@@ -1,5 +1,4 @@
 ---
-import Arc from './Arc.astro';
 import Icon from './Icon.astro';
 
 const axes = [
@@ -9,37 +8,34 @@ const axes = [
 ];
 ---
 
-<section class="hero">
-	<Arc variant="home" />
-	<div class="wrap hero__grid">
-		<div>
-			<p class="kicker mb-7">Blog technique · Mathurin Bourgouin</p>
-			<h1 class="hero__title">
+<section aria-labelledby="hero-title" class="hero">
+	<div class="wrap">
+		<div class="hero__intro">
+			<!-- Sur l'accueil uniquement, le cadran passe en grand format, posé sur le filet des axes éditoriaux. -->
+			<svg class="hero__arc" aria-hidden="true" viewBox="0 0 360 185"
+				><circle cx="180" cy="185" r="170" fill="none" stroke="#2A3650" stroke-width="1" stroke-dasharray="1008 60" transform="rotate(-34.9 180 185)"></circle><circle cx="180" cy="185" r="115" fill="none" stroke="#1E293B" stroke-width="0.8"></circle><circle cx="180" cy="185" r="60" fill="none" stroke="#1A2438" stroke-width="0.8"></circle><line x1="180" y1="185" x2="286" y2="79" stroke="#818CF8" stroke-width="1.4" stroke-linecap="round"></line><circle cx="180" cy="185" r="4" fill="#818CF8"></circle></svg>
+			<p class="kicker mb-8">Blog technique · numeolab.fr</p>
+			<h1 id="hero-title" class="hero__title">
 				Génie logiciel, résilience et <em>ergonomie cognitive</em>.
 			</h1>
-			<p class="lead mb-10 max-w-[34em]">
+			<p class="hero__lead">
 				Analyses, retours d'expérience et notes de lecture sur la conception de systèmes logiciels fiables — et sur ce
 				que les agents IA changent pour leur exploitation, leur test et leur gouvernance.
 			</p>
-			<div class="flex flex-wrap gap-3">
-				<a href="/blog/" class="btn btn--primary" data-astro-prefetch>Lire les articles<Icon name="arrow-right" size={16} /></a>
-				<a href="/rss.xml" class="btn btn--ghost">S'abonner par RSS</a>
+			<div class="flex flex-wrap gap-3 mt-11">
+				<a href="/blog/" class="btn btn--primary hero__btn" data-astro-prefetch>Lire les articles<Icon name="arrow-right" size={16} /></a>
+				<a href="/rss.xml" class="btn btn--ghost hero__btn">S'abonner par RSS</a>
 			</div>
 		</div>
-		<div>
-			<p class="kicker mb-2 text-muted">Axes éditoriaux</p>
-			<ol class="list-none m-0 p-0">
-				{axes.map((axe, i) => (
-					<li class="flex gap-5 py-[22px] border-b border-line">
-						<span class="font-mono text-[13px] text-signal pt-[3px]">{String(i + 1).padStart(2, '0')}</span>
-						<div>
-							<p class="m-0 mb-1.5 font-semibold">{axe.title}</p>
-							<p class="m-0 text-sm leading-relaxed text-muted">{axe.text}</p>
-						</div>
-					</li>
-				))}
-			</ol>
-		</div>
+		<ol class="axes" aria-label="Axes éditoriaux">
+			{axes.map((axe, i) => (
+				<li class="axis">
+					<p class="m-0 mb-3.5 font-mono text-[13px] text-signal">{String(i + 1).padStart(2, '0')}</p>
+					<p class="m-0 mb-2 text-[17px] font-semibold">{axe.title}</p>
+					<p class="m-0 text-sm leading-relaxed text-muted">{axe.text}</p>
+				</li>
+			))}
+		</ol>
 	</div>
 </section>
 
@@ -48,44 +44,100 @@ const axes = [
 		position: relative;
 		overflow: hidden;
 		isolation: isolate;
-		padding: 104px 0 150px;
+		background: var(--color-ink);
 		border-bottom: 1px solid var(--color-line-strong);
 	}
 
-	.hero__grid {
-		display: grid;
-		grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-		gap: 72px;
-		align-items: start;
+	.hero__intro {
+		position: relative;
+		padding: 128px 0 112px;
+	}
+
+	.hero__arc {
+		position: absolute;
+		bottom: 0;
+		right: -186px;
+		z-index: -1;
+		width: 620px;
+		height: 319px;
+		pointer-events: none;
 	}
 
 	.hero__title {
-		margin: 0 0 28px;
-		font-size: 3.25rem;
-		line-height: 1.1;
-		font-weight: 600;
-		letter-spacing: -0.025em;
+		margin: 0;
+		max-width: 700px;
+		font-size: 5.5rem;
+		line-height: 1.02;
+		font-weight: 500;
+		letter-spacing: -0.03em;
 		color: var(--color-paper);
 	}
 
 	.hero__title em {
 		font-style: italic;
-		font-weight: 500;
 		color: var(--color-signal-light);
 	}
 
+	.hero__lead {
+		margin: 36px 0 0;
+		max-width: 34em;
+		font-size: 19px;
+		line-height: 1.65;
+		color: var(--color-body);
+	}
+
+	.hero__btn {
+		min-height: 52px;
+		padding: 0 26px;
+		font-size: 16px;
+	}
+
+	.axes {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border-top: 1px solid var(--color-line-strong);
+	}
+
+	.axis {
+		padding: 28px 32px 40px;
+		border-left: 1px solid var(--color-line);
+	}
+
+	.axis:first-child {
+		padding-left: 0;
+		border-left: none;
+	}
+
 	@media (max-width: 860px) {
-		.hero {
-			padding: 72px 0 140px;
+		.hero__intro {
+			padding: 80px 0 96px;
 		}
 
-		.hero__grid {
-			grid-template-columns: 1fr;
-			gap: 48px;
+		.hero__arc {
+			width: 300px;
+			height: 154px;
+			right: -110px;
 		}
 
 		.hero__title {
-			font-size: 2.25rem;
+			font-size: 3rem;
+		}
+
+		.axes {
+			grid-template-columns: 1fr;
+		}
+
+		.axis {
+			padding: 22px 0;
+			border-left: none;
+			border-top: 1px solid var(--color-line);
+		}
+
+		.axis:first-child {
+			border-top: none;
 		}
 	}
 </style>
