@@ -222,15 +222,8 @@
     right: calc(max(0px, (100% - 1152px) / 2) + 32px - 180px);
   }
 
-  .arc--home {
-    width: 300px;
-    height: 154px;
-    right: calc(max(0px, (100% - 1152px) / 2) + 32px - 150px);
-  }
-
   @media (max-width: 860px) {
-    .arc,
-    .arc--home {
+    .arc {
       width: 220px;
       height: 113px;
       right: calc(16px - 110px);
