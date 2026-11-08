@@ -46,12 +46,16 @@ const ARC = svgDataUri(
 const fontFile = (pkg: string, file: string) =>
   fs.readFileSync(path.join(process.cwd(), 'node_modules', '@fontsource', pkg, 'files', file));
 
+// Satori ne gère pas les polices variables : Newsreader est figée à la taille
+// optique 72 (« display »), celle que le navigateur applique aux grands titres.
+const displayFontFile = (file: string) => fs.readFileSync(path.join(process.cwd(), 'src', 'lib', 'og-fonts', file));
+
 let fonts: Parameters<typeof satori>[1]['fonts'] | undefined;
 const loadFonts = () =>
   (fonts ??= [
-    { name: 'Newsreader', data: fontFile('newsreader', 'newsreader-latin-500-normal.woff'), weight: 500, style: 'normal' },
-    { name: 'Newsreader', data: fontFile('newsreader', 'newsreader-latin-500-italic.woff'), weight: 500, style: 'italic' },
-    { name: 'Newsreader', data: fontFile('newsreader', 'newsreader-latin-600-normal.woff'), weight: 600, style: 'normal' },
+    { name: 'Newsreader', data: displayFontFile('Newsreader72-Medium.ttf'), weight: 500, style: 'normal' },
+    { name: 'Newsreader', data: displayFontFile('Newsreader72-MediumItalic.ttf'), weight: 500, style: 'italic' },
+    { name: 'Newsreader', data: displayFontFile('Newsreader72-SemiBold.ttf'), weight: 600, style: 'normal' },
     { name: 'Plex Sans', data: fontFile('ibm-plex-sans', 'ibm-plex-sans-latin-400-normal.woff'), weight: 400, style: 'normal' },
     { name: 'Plex Sans', data: fontFile('ibm-plex-sans', 'ibm-plex-sans-latin-600-normal.woff'), weight: 600, style: 'normal' },
     { name: 'Plex Mono', data: fontFile('ibm-plex-mono', 'ibm-plex-mono-latin-400-normal.woff'), weight: 400, style: 'normal' },
