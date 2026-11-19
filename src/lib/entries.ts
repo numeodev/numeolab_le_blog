@@ -104,7 +104,6 @@ export function groupByYear<T extends { publishedAt: Date }>(items: T[]): [numbe
 export interface Heading {
   id: string;
   text: string;
-  level: 2 | 3;
 }
 
 const HEADING = /<h([23])([^>]*)>([\s\S]*?)<\/h\1>/gi;
@@ -135,12 +134,22 @@ const stripTags = (html: string) => {
   return text.replaceAll('<', '');
 };
 
-/** Ajoute un `id` aux intertitres h2/h3 du contenu et en extrait le sommaire. */
+// Le titre de l'article est le seul h1 de la page : si le contenu utilise des
+// h1 pour ses sections, tous ses intertitres descendent d'un niveau.
+const demoteHeadings = (html: string) =>
+  /<h1[\s>]/i.test(html)
+    ? html.replace(/<(\/?)h([1-5])(?=[\s>])/gi, (_, slash: string, level: string) => `<${slash}h${Number(level) + 1}`)
+    : html;
+
+/**
+ * Ajoute un `id` aux intertitres h2/h3 du contenu et en extrait le sommaire,
+ * limité aux sections de premier niveau.
+ */
 export function withHeadingIds(html: string): { html: string; headings: Heading[] } {
   const headings: Heading[] = [];
   const used = new Set<string>();
 
-  const result = html.replace(HEADING, (_, level: string, attrs: string, inner: string) => {
+  const result = demoteHeadings(html).replace(HEADING, (_, level: string, attrs: string, inner: string) => {
     const text = decodeEntities(stripTags(inner)).trim();
     const existing = attrs.match(/\sid=["']([^"']+)["']/)?.[1];
     let id = existing ?? (slugify(text) || 'section');
@@ -149,7 +158,7 @@ export function withHeadingIds(html: string): { html: string; headings: Heading[
       for (let n = 2; used.has(id); n++) id = `${base}-${n}`;
     }
     used.add(id);
-    if (text) headings.push({ id, text, level: Number(level) as 2 | 3 });
+    if (text && level === '2') headings.push({ id, text });
     const idAttr = existing ? '' : ` id="${id}"`;
     return `<h${level}${idAttr}${attrs}>${inner}</h${level}>`;
   });
